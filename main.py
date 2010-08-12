@@ -29,4 +29,4 @@ while ticks<150:
 	for char in vars.character:
 		char.Tick()
 	ticks+=1
-	print ticks
+	funcs.DrawString(ticks)

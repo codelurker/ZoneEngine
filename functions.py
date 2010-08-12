@@ -25,7 +25,7 @@ def Parents_MakeChild(mother1,father1):
 	child=classes.Character(mother=mother1,father=father1)
 	mother1.children.append(child)
 	father1.children.append(child)
-	WriteString(mother1.name+' ('+str(mother1.id)+')'+' gives birth to '+child.name+' ('+str(child.id)+')')
+	DrawString(mother1.name+' ('+str(mother1.id)+')'+' gives birth to '+child.name+' ('+str(child.id)+')')
 	return child
 
 def Parents_BirthGender(mother,father):
@@ -94,7 +94,7 @@ def FindInList(what,list):
 			return i
 		i+=1
 
-def WriteString(str,x=0,y=0):
+def DrawString(str,x=0,y=0):
 	if vars.curses:
 		vars.screen.addstr(x, y, str)
 	else:

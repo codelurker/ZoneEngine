@@ -80,11 +80,11 @@ class Character:
 	def Tick(self):
 		if self.ticks==20:
 			self.age+=1
-			print self.name+' is now '+str(self.age)
+			funcs.DrawString(self.name+' is now '+str(self.age))
 			self.ticks=0
 		if self.age==50:
 			del vars.character[funcs.FindInList(self,vars.character)]
-			print self.name+' has died. Removing '+str(self.id)
+			funcs.DrawString(self.name+' has died. Removing '+str(self.id))
 		
 		if len(self.children)<2 and self.gender=="Female":
 			if random.randint(0,50)<=8:
@@ -97,22 +97,22 @@ class Character:
 	def HasChild(self,thefather=vars.VOID):
 		child=Character(mother=self,father=thefather)
 		self.children.append(child)
-		print self.name+' ('+str(self.id)+')'+' gives birth to '+child.name+' ('+str(child.id)+')'
+		funcs.DrawString(self.name+' ('+str(self.id)+')'+' gives birth to '+child.name+' ('+str(child.id)+')')
 		return child
 			
 	def ShowStats(self):
-		print 'Name: \t\t'+self.name
-		print 'Race: \t\t'+self.race
-		print 'Gender: \t'+self.gender
+		funcs.DrawString('Name: \t\t'+self.name)
+		funcs.DrawString('Race: \t\t'+self.race)
+		funcs.DrawString('Gender: \t'+self.gender)
 		#print 'Age: \t\t'+str(self.age)
 		#print 'Level: \t\t'+str(self.level)
-		print 'Skills:'
+		funcs.DrawString('Skills:')
 		for entry in self.skills:
-			print '\t'+entry
-		print 'Diseases:'
+			funcs.DrawString('\t'+entry)
+		funcs.DrawString('Diseases:')
 		for entry in self.diseases:
-			print '\t'+entry
-		print "MaleHuman: "+str(self.Self_SocialMaleHuman)
-		print "FemaleHuman: "+str(self.Self_SocialFemaleHuman)
-		print "MaleElf: "+str(self.Self_SocialMaleElf)
-		print "FemaleElf: "+str(self.Self_SocialFemaleElf)
+			funcs.DrawString('\t'+entry)
+		funcs.DrawString("MaleHuman: "+str(self.Self_SocialMaleHuman))
+		funcs.DrawString("FemaleHuman: "+str(self.Self_SocialFemaleHuman))
+		funcs.DrawString("MaleElf: "+str(self.Self_SocialMaleElf))
+		funcs.DrawString("FemaleElf: "+str(self.Self_SocialFemaleElf))
