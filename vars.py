@@ -7,6 +7,7 @@ femalename=['Aidan','Abby','April']
 malename=['Aaron','Arod','Luke']
 lastname=['Test']
 
+MsgBox=[]
 
 disease_listName=[]
 disease_listEffect=[]

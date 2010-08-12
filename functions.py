@@ -94,9 +94,18 @@ def FindInList(what,list):
 			return i
 		i+=1
 
-def DrawString(str,x=0,y=0):
+def DrawList(list):
+	num=1
+	for entry in list:
+		vars.screen.addstr(1, num, str(entry))
+		if num==10:
+			num+=1
+		else:
+			num=1
+
+def DrawString(string):
 	if vars.curses:
-		vars.screen.addstr(x, y, str)
+		vars.MsgBox.append(string)
 	else:
-		print str
+		print string
 		

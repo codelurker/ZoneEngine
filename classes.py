@@ -18,6 +18,8 @@ class Character:
 		self.id=funcs.ID_Give()
 		self.x=mother.x
 		self.y=mother.y
+		self.last_x=0
+		self.last_y=0
 		self.ticks=0
 		vars.character.append(self)
 		
@@ -89,8 +91,46 @@ class Character:
 		if len(self.children)<2 and self.gender=="Female":
 			if random.randint(0,50)<=8:
 				child=self.HasChild()
+
+		self.MoveRandomize()
+		self.Draw()
 		self.ticks+=1
+
+	def MoveRandomize(self,xm=True,ym=True):
+		if xm==True:
+			mov_x1=random.randint(0,100)
+			mov_x=0
+			if mov_x1<45:
+				mov_x=-1
+			else:
+				if mov_x1>55:
+					mov_x=1
+			if mov_x==self.last_x:		
+				self.MoveRandomize(xm=True,ym=False)
+			else:
+				self.last_x=mov_x
+				if self.x>0 and self.x<20:
+					self.x+=mov_x	
+		if ym==True:
+			mov_y1=random.randint(0,100)
+			mov_y=0
+			if mov_y1<45:
+				mov_y=-1
+			else:
+				if mov_y1>55:
+					mov_y=1
+			if mov_y==self.last_y:
+				self.MoveRandomize(xm=False,ym=True)
+			else:
+				self.last_y=mov_y
+				if self.y>0 and self.y<20:
+					self.y+=mov_y
+		if self.x==0: self.x=1
+		if self.y==0: self.y=1
 	
+	def Draw(self):
+		vars.screen.addstr(self.x, self.y, 'O')
+
 	def Level(self,value=1):
 		self.level+=value
 	
