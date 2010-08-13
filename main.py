@@ -7,10 +7,16 @@ try:
 except IndexError:
 	print "No curses."
 
+vars.curses=True
+
 if vars.curses==True:
-	import curses
-	vars.screen = curses.initscr()
-	curses.noecho()
+	from unicurses import *
+	vars.screen = initscr()
+	noecho()
+	cbreak()
+	curs_set(0)
+	keypad(vars.screen, True)
+	start_color()
 
 random.seed()
 
@@ -31,7 +37,7 @@ while ticks<250:
 	ticks+=1
 	#funcs.DrawString(ticks)
 	#funcs.DrawList(vars.MsgBox)
-	vars.screen.refresh()
+	if vars.curses: refresh()
 	time.sleep(0.01)
 
-curses.endwin()
+if vars.curses: endwin()

@@ -1,5 +1,6 @@
 import vars,random
 import functions as funcs
+from unicurses import *
 vars.ID=0
 
 random.seed()
@@ -129,7 +130,8 @@ class Character:
 		if self.y==0: self.y=1
 	
 	def Draw(self):
-		vars.screen.addstr(self.x, self.y, 'O')
+		if vars.curses:
+			mvaddstr(self.x, self.y, 'O')
 
 	def Level(self,value=1):
 		self.level+=value
