@@ -19,18 +19,28 @@ class Map:
 		self.Map=ones((self.sizeX,self.sizeY))
 		self.rooms=[]
 	def Generate(self):
-		#Make the first room.
-		self.start_room=Room(5,5)
-		self.rooms.append(self.start_room)
-		self.start_room.Generate()
-		#Place the room in a good spot
-		self.Place(self.start_room)
+		#Make some rooms
+		for a in range(5):
+			temp=Room(random.randint(10,15),random.randint(10,15))
+			self.rooms.append(temp)
+			temp.Generate()
+			findX=random.randint(5,10)*(a+random.randint(1,5))
+			findY=random.randint(1,5)*(a+random.randint(1,4))+temp.sizeY
+			while findX+temp.sizeX>self.sizeX:
+				findX=random.randint(5,10)*(a+random.randint(1,5))
+			while findY+temp.sizeY>self.sizeY:
+				findY=random.randint(1,5)*(a+random.randint(1,4))
+			self.Place(temp,x1=findX,y1=findY)
 		#Dig some tunnels
-		self.Dig(self.start_room)
-	def Place(self,room):
+		#self.Dig(self.start_room)
+	def Place(self,room,x1=0,y1=0):
 		for y in range(room.sizeY):
 			for x in range(room.sizeX):
-				self.Map[x+1,y+1]=self.start_room.Tile[x,y]
+				if self.Map[x1+x,y1+y]==1:
+					self.Map[x1+x,y1+y]=room.Tile[x,y]
+				else:
+					if y!=0 and y!=room.sizeY-1 and x!=0 and x!=room.sizeX-1:
+						self.Map[x1+x,y1+y]=4
 	def Draw(self):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
@@ -67,7 +77,7 @@ def Render(num):
 	if num==4: return "."
 	if num==5: return "H"
 
-map1=Map(40,20)
+map1=Map(75,25)
 map1.Generate()
 map1.Draw()
 refresh()
