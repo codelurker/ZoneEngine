@@ -8,6 +8,7 @@ cbreak()
 curs_set(0)
 keypad(stdscr, True)
 start_color()
+init_pair(1, COLOR_GREEN, COLOR_BLACK)
 random.seed()
 vars.MSG="ZoneEngine"
 vars.MSG2=">Randomized..."
@@ -20,8 +21,8 @@ class Map:
 		self.rooms=[]
 	def Generate(self):
 		#Make some rooms
-		for a in range(5):
-			temp=Room(random.randint(10,15),random.randint(10,15))
+		for a in range(10):
+			temp=Room(random.randint(10,15),random.randint(6,10))
 			self.rooms.append(temp)
 			temp.Generate()
 			findX=random.randint(5,10)*(a+random.randint(1,5))
@@ -32,7 +33,7 @@ class Map:
 				findY=random.randint(1,5)*(a+random.randint(1,4))
 			self.Place(temp,x1=findX,y1=findY)
 		#Dig some tunnels
-		#self.Dig(self.start_room)
+		self.Dig()
 	def Place(self,room,x1=0,y1=0):
 		for y in range(room.sizeY):
 			for x in range(room.sizeX):
@@ -44,9 +45,26 @@ class Map:
 	def Draw(self):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
-				mvaddstr(y, x, Render(self.Map[x,y]))
-	def Dig(self,room):
-		pass
+				if self.Map[x,y]==4:
+					attron(COLOR_PAIR(1))
+					mvaddstr(y, x, Render(self.Map[x,y]))
+					attroff(COLOR_PAIR(1))
+				if self.Map[x,y]==3:
+					attron(A_ALTCHARSET)
+					mvaddstr(y, x, Render(self.Map[x,y]))
+					attroff(A_ALTCHARSET)
+				if self.Map[x,y]!=3 and self.Map[x,y]!=4:
+					mvaddstr(y, x, Render(self.Map[x,y]))
+	def Dig(self):
+		for y in range(self.sizeY):
+			for x in range(self.sizeX):
+				try:
+					if self.Map[x,y]==5:
+						if self.Map[x,y-1]!=1 and self.Map[x,y+1]!=1:
+							if self.Map[x-1,y]!=1 and self.Map[x+1,y]!=1:
+								self.Map[x,y]=4
+				except IndexError:
+					pass
 
 class Room:
 	def __init__(self,x1,y1):
@@ -75,10 +93,11 @@ def Render(num):
 	if num==2: return "+"
 	if num==3: return "#"
 	if num==4: return "."
-	if num==5: return "H"
+	if num==5: return "#"
 
 map1=Map(75,25)
 map1.Generate()
 map1.Draw()
+mvaddstr(0, 0, ':'+vars.MSG)
 refresh()
 endwin()
