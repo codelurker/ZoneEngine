@@ -21,14 +21,14 @@ class Map:
 		self.rooms=[]
 	def Generate(self):
 		#Make some rooms
-		for a in range(10):
+		for a in range(12):
 			temp=Room(random.randint(10,15),random.randint(6,10))
 			self.rooms.append(temp)
 			temp.Generate()
-			findX=random.randint(5,10)*(a+random.randint(1,5))
+			findX=random.randint(2,10)*(a+random.randint(1,5))
 			findY=random.randint(1,5)*(a+random.randint(1,4))+temp.sizeY
 			while findX+temp.sizeX>self.sizeX:
-				findX=random.randint(5,10)*(a+random.randint(1,5))
+				findX=random.randint(2,10)*(a+random.randint(1,5))
 			while findY+temp.sizeY>self.sizeY:
 				findY=random.randint(1,5)*(a+random.randint(1,4))
 			self.Place(temp,x1=findX,y1=findY)
@@ -45,6 +45,12 @@ class Map:
 	def Draw(self):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
+				if self.Map[x,y]==1:
+					#attron(COLOR_PAIR(1))
+					#attron(A_PROTECT)
+					mvaddstr(y, x, Render(self.Map[x,y]))
+					#attroff(A_PROTECT)
+					#attroff(COLOR_PAIR(1))
 				if self.Map[x,y]==4:
 					attron(COLOR_PAIR(1))
 					mvaddstr(y, x, Render(self.Map[x,y]))
@@ -53,7 +59,7 @@ class Map:
 					attron(A_ALTCHARSET)
 					mvaddstr(y, x, Render(self.Map[x,y]))
 					attroff(A_ALTCHARSET)
-				if self.Map[x,y]!=3 and self.Map[x,y]!=4:
+				if self.Map[x,y]!=3 and self.Map[x,y]!=4 and self.Map[x,y]!=1:
 					mvaddstr(y, x, Render(self.Map[x,y]))
 	def Dig(self):
 		for y in range(self.sizeY):
@@ -75,12 +81,12 @@ class Room:
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
 				if x==0 or x==self.sizeX-1:
-					if random.randint(0,10)==5:
+					if random.randint(0,6)<=3:
 						self.Tile[x,y]=5
 					else:
 						self.Tile[x,y]=3
 				if y==0 or y==self.sizeY-1:
-					if random.randint(0,10)==5:
+					if random.randint(0,6)<=3:
 						self.Tile[x,y]=5
 					else:
 						self.Tile[x,y]=3
@@ -95,7 +101,7 @@ def Render(num):
 	if num==4: return "."
 	if num==5: return "#"
 
-map1=Map(75,25)
+map1=Map(80,25)
 map1.Generate()
 map1.Draw()
 mvaddstr(0, 0, ':'+vars.MSG)
