@@ -2,7 +2,6 @@ import vars,random
 import functions as funcs
 from unicurses import *
 vars.ID=0
-
 random.seed()
 
 class Void:
@@ -79,6 +78,8 @@ class Character:
 		#Tracking
 		self.status='ready'
 		self.children=[]
+		
+		funcs.Self_PutOnMap(self)
 	
 	def Tick(self):
 		if self.ticks==20:
@@ -98,40 +99,55 @@ class Character:
 		self.ticks+=1
 
 	def MoveRandomize(self,xm=True,ym=True):
-		if xm==True:
-			mov_x1=random.randint(0,100)
-			mov_x=0
-			if mov_x1<45:
-				mov_x=-1
-			else:
-				if mov_x1>55:
-					mov_x=1
-			if mov_x==self.last_x:		
-				self.MoveRandomize(xm=True,ym=False)
-			else:
-				self.last_x=mov_x
-				if self.x>0 and self.x<20:
-					self.x+=mov_x	
-		if ym==True:
-			mov_y1=random.randint(0,100)
-			mov_y=0
-			if mov_y1<45:
-				mov_y=-1
-			else:
-				if mov_y1>55:
-					mov_y=1
-			if mov_y==self.last_y:
-				self.MoveRandomize(xm=False,ym=True)
-			else:
-				self.last_y=mov_y
-				if self.y>0 and self.y<20:
-					self.y+=mov_y
-		if self.x==0: self.x=1
-		if self.y==0: self.y=1
+		num=int(random.choice('2648'))
+		if num==2:
+			if vars.map1.Map[self.x,self.y+1]==4:
+				self.y+=1
+		elif num==4:
+			if vars.map1.Map[self.x-1,self.y]==4:
+				self.x-=1
+		elif num==6:
+			if vars.map1.Map[self.x+1,self.y]==4:
+				self.x+=1
+		elif num==8:
+			if vars.map1.Map[self.x,self.y-1]==4:
+				self.y-=1
+		#if xm==True:
+		#	mov_x1=random.randint(0,100)
+		#	mov_x=0
+		#	if mov_x1<45:
+		#		mov_x=-1
+		#	else:
+		#		if mov_x1>55:
+		#			mov_x=1
+		#	if mov_x==self.last_x:		
+		#		self.MoveRandomize(xm=True,ym=False)
+		#	else:
+		#		self.last_x=mov_x
+		#		if self.x>0 and self.x<20:
+		#			self.x+=mov_x	
+		#if ym==True:
+		#	mov_y1=random.randint(0,100)
+		#	mov_y=0
+		#	if mov_y1<45:
+		#		mov_y=-1
+		#	else:
+		#		if mov_y1>55:
+		#			mov_y=1
+		#	if mov_y==self.last_y:
+		#		self.MoveRandomize(xm=False,ym=True)
+		#	else:
+		#		self.last_y=mov_y
+		#		if self.y>0 and self.y<20:
+		#			self.y+=mov_y
+		#if self.x==0: self.x=1
+		#if self.y==0: self.y=1
 	
 	def Draw(self):
 		if vars.curses:
-			mvaddstr(self.x, self.y, 'O')
+			attron(COLOR_PAIR(2))
+			mvaddstr(self.y,self.x,'@')
+			attroff(COLOR_PAIR(2))
 
 	def Level(self,value=1):
 		self.level+=value

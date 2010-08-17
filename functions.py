@@ -87,6 +87,15 @@ def Self_GetSocial(character):
 			character.Self_SocialMaleElf-=5
 			character.Self_SocialFemaleElf+=10
 
+def Self_PutOnMap(character):
+	for y1 in range(vars.map1.sizeY):
+			for x1 in range(vars.map1.sizeX):
+				if vars.map1.Map[x1,y1]==4:
+					if random.randint(1,20)<8:
+						character.x=x1
+						character.y=y1
+						return
+
 def FindInList(what,list):
 	i=0
 	for entry in list:
