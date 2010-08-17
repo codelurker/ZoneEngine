@@ -21,16 +21,19 @@ class Map:
 		self.rooms=[]
 	def Generate(self):
 		#Make some rooms
-		for a in range(12):
-			temp=Room(random.randint(10,15),random.randint(6,10))
+		for a in range(13):
+			if a>=0:
+				temp=Room(random.randint(10,15),random.randint(6,10))
+			else:
+				temp=Room(random.randint(5,10),random.randint(3,8),no_fill=True)
 			self.rooms.append(temp)
 			temp.Generate()
-			findX=random.randint(2,10)*(a+random.randint(1,5))
-			findY=random.randint(1,5)*(a+random.randint(1,4))+temp.sizeY
+			findX=random.randint(2,10)*(a+random.randint(1,5))-3
+			findY=random.randint(1,5)*(a+random.randint(1,4))+temp.sizeY-3
 			while findX+temp.sizeX>self.sizeX:
-				findX=random.randint(2,10)*(a+random.randint(1,5))
+				findX=random.randint(2,10)*(a+random.randint(1,5))-3
 			while findY+temp.sizeY>self.sizeY:
-				findY=random.randint(1,5)*(a+random.randint(1,4))
+				findY=random.randint(1,5)*(a+random.randint(1,4))-3
 			self.Place(temp,x1=findX,y1=findY)
 		#Dig some tunnels
 		self.Dig()
@@ -73,26 +76,36 @@ class Map:
 					pass
 
 class Room:
-	def __init__(self,x1,y1):
+	def __init__(self,x1,y1,no_fill=False):
 		self.sizeX=x1
 		self.sizeY=y1
 		self.Tile=ones((self.sizeX,self.sizeY))
+		self.no_fill=no_fill
 	def Generate(self):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
-				if x==0 or x==self.sizeX-1:
-					if random.randint(0,6)<=3:
-						self.Tile[x,y]=5
-					else:
-						self.Tile[x,y]=3
-				if y==0 or y==self.sizeY-1:
-					if random.randint(0,6)<=3:
-						self.Tile[x,y]=5
-					else:
-						self.Tile[x,y]=3
-				if y>0 and y<self.sizeY-1:
-					if x>0 and x<self.sizeX-1:
-						self.Tile[x,y]=4
+				if self.no_fill==False:
+					if x==0 or x==self.sizeX-1:
+						if random.randint(0,6)<=3:
+							self.Tile[x,y]=5
+						else:
+							self.Tile[x,y]=3
+					if y==0 or y==self.sizeY-1:
+						if random.randint(0,6)<=3:
+							self.Tile[x,y]=5
+						else:
+							self.Tile[x,y]=3
+					if y>0 and y<self.sizeY-1:
+						if x>0 and x<self.sizeX-1:
+							self.Tile[x,y]=4
+				else:
+					if x==0 or x==self.sizeX-1:
+							self.Tile[x,y]=3
+					if y==0 or y==self.sizeY-1:
+							self.Tile[x,y]=3
+					if y>0 and y<self.sizeY-1:
+						if x>0 and x<self.sizeX-1:
+							self.Tile[x,y]=1
 		
 def Render(num):
 	if num==1: return " "
@@ -104,6 +117,6 @@ def Render(num):
 map1=Map(80,25)
 map1.Generate()
 map1.Draw()
-mvaddstr(0, 0, ':'+vars.MSG)
+mvaddstr(0, 0, ''+vars.MSG)
 refresh()
 endwin()
