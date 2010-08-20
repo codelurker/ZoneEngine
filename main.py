@@ -8,6 +8,8 @@ try:
 except IndexError:
 	print "No curses."
 
+vars.TOPBAR='ZoneEngine'
+
 vars.curses=True
 
 if vars.curses==True:
@@ -20,6 +22,7 @@ if vars.curses==True:
 	start_color()
 	init_pair(1, COLOR_GREEN, COLOR_BLACK)
 	init_pair(2, COLOR_CYAN, COLOR_BLACK)
+	init_pair(3, COLOR_RED, COLOR_BLACK)
 
 random.seed()
 ticks=0
@@ -30,20 +33,19 @@ vars.map1.Draw()
 
 adam=classes.Character(gender='Male',name='Adam',age=20)
 eve=classes.Character(gender='Female',name='Eve',age=20)
-adam1=classes.Character(gender='Male',name='Adam1',age=20)
-eve1=classes.Character(gender='Female',name='Eve1',age=20)
+#adam1=classes.Character(gender='Male',name='Adam1',age=20)
+#eve1=classes.Character(gender='Female',name='Eve1',age=20)
 player=classes.Character(isplayer=True,name='Player',gender="Male")
 
 funcs.Parents_MakeChild(eve,adam)
-funcs.Parents_MakeChild(eve1,adam1)
+#funcs.Parents_MakeChild(eve1,adam1)
 
-while ticks<250:
+while ticks<100:
 	for char in vars.character:
 		vars.map1.DrawPos(char.x,char.y)
 		char.Tick()
 	ticks+=1
-	#funcs.DrawString(ticks)
-	#funcs.DrawList(vars.MsgBox)
+	funcs.DrawStringColor(3,vars.TOPBAR)
 	if vars.curses: refresh()
 	time.sleep(0.01)
 

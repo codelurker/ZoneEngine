@@ -1,4 +1,5 @@
 import vars,random,classes
+from unicurses import *
 
 random.seed()
 
@@ -112,9 +113,23 @@ def DrawList(list):
 		else:
 			num=1
 
-def DrawString(string):
+def ClearLine(dist):
+	for a in range(dist):
+		mvaddstr(0,a," ")
+
+def DrawString(string1):
 	if vars.curses:
-		vars.MsgBox.append(string)
+		ClearLine(80)
+		mvaddstr(0,0,string1)
 	else:
-		print string
+		print string1
+
+def DrawStringColor(color1,string1):
+	if vars.curses:
+		ClearLine(80)
+		attron(COLOR_PAIR(color1))
+		mvaddstr(0,0,string1)
+		attroff(COLOR_PAIR(color1))
+	else:
+		print string1
 		

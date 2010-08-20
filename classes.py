@@ -90,7 +90,7 @@ class Character:
 			del vars.character[funcs.FindInList(self,vars.character)]
 			funcs.DrawString(self.name+' has died. Removing '+str(self.id))
 		
-		if len(self.children)<2 and self.gender=="Female":
+		if len(self.children)<1 and self.gender=="Female":
 			if random.randint(0,50)<=8:
 				child=self.HasChild()
 
@@ -112,36 +112,7 @@ class Character:
 		elif num==8:
 			if vars.map1.Map[self.x,self.y-1]==4:
 				self.y-=1
-		#if xm==True:
-		#	mov_x1=random.randint(0,100)
-		#	mov_x=0
-		#	if mov_x1<45:
-		#		mov_x=-1
-		#	else:
-		#		if mov_x1>55:
-		#			mov_x=1
-		#	if mov_x==self.last_x:		
-		#		self.MoveRandomize(xm=True,ym=False)
-		#	else:
-		#		self.last_x=mov_x
-		#		if self.x>0 and self.x<20:
-		#			self.x+=mov_x	
-		#if ym==True:
-		#	mov_y1=random.randint(0,100)
-		#	mov_y=0
-		#	if mov_y1<45:
-		#		mov_y=-1
-		#	else:
-		#		if mov_y1>55:
-		#			mov_y=1
-		#	if mov_y==self.last_y:
-		#		self.MoveRandomize(xm=False,ym=True)
-		#	else:
-		#		self.last_y=mov_y
-		#		if self.y>0 and self.y<20:
-		#			self.y+=mov_y
-		#if self.x==0: self.x=1
-		#if self.y==0: self.y=1
+
 	
 	def Draw(self):
 		if vars.curses:
