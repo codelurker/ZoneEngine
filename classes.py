@@ -4,12 +4,27 @@ from unicurses import *
 vars.ID=0
 random.seed()
 
+init_pair(1, COLOR_GREEN, COLOR_BLACK)
+init_pair(2, COLOR_CYAN, COLOR_BLACK)
+init_pair(3, COLOR_RED, COLOR_BLACK)
+
 class Void:
 	def __init__(self):
 		self.x=1
 		self.y=1
 		self.name="VOID"
 vars.VOID=Void()
+
+class Item:
+	def __init__(self,name='null',type='null',x=-1,y=-1,owner=None):
+		self.name=name
+		self.type=type
+		self.x=x
+		self.y=y
+		self.owner=owner
+		
+		if owner!=None:
+			owner.GiveItem(self)
 
 class Character:
 	def __init__(self,isplayer=False,initial=False,father=vars.VOID,mother=vars.VOID,gender="",name="null",race="null",age=0):
@@ -22,6 +37,7 @@ class Character:
 		self.last_y=0
 		self.ticks=0
 		vars.character.append(self)
+		self.sprite='@'
 		
 		#Character history
 		self.age=age
@@ -79,7 +95,45 @@ class Character:
 		self.status='ready'
 		self.children=[]
 		
+		#Inventory
+		self.inventory=[]
+		
 		funcs.Self_PutOnMap(self)
+	
+	def GetInput(self):
+		finished=False
+		while finished==False:
+			key=wgetch(vars.screen)
+			if key==KEY_UP:
+				if vars.map1.Map[self.x,self.y-1]==4 or vars.map1.Map[self.x,self.y-1]==1:
+					vars.map1.DrawPos(self.x,self.y)
+					self.y-=1
+				finished=True
+			elif key==KEY_DOWN:
+				if vars.map1.Map[self.x,self.y+1]==4 or vars.map1.Map[self.x,self.y+1]==1:
+					vars.map1.DrawPos(self.x,self.y)
+					self.y+=1
+				finished=True
+			elif key==KEY_LEFT:
+				if vars.map1.Map[self.x-1,self.y]==4 or vars.map1.Map[self.x-1,self.y]==1:
+					vars.map1.DrawPos(self.x,self.y)
+					self.x-=1
+				finished=True
+			elif key==KEY_RIGHT:
+				if vars.map1.Map[self.x+1,self.y]==4 or vars.map1.Map[self.x+1,self.y]==1:
+					vars.map1.DrawPos(self.x,self.y)
+					self.x+=1
+				finished=True
+			elif key==ord('i'):
+				a=1
+				funcs.DrawStringColor(2,'Inventory',x=0,y=0)
+				for item in self.inventory:
+					funcs.DrawString(str(a)+') '+item.name,y=a)
+					a+=1
+				refresh()
+			elif key==ord('q'):
+				vars.running=False
+				finished=True
 	
 	def Tick(self):
 		if self.ticks==20:
@@ -94,31 +148,38 @@ class Character:
 			if random.randint(0,50)<=8:
 				child=self.HasChild()
 
-		self.MoveRandomize()
+		if not self.isplayer:
+			self.MoveRandomize()
 		self.Draw()
 		self.ticks+=1
 
 	def MoveRandomize(self,xm=True,ym=True):
 		num=int(random.choice('2648'))
 		if num==2:
-			if vars.map1.Map[self.x,self.y+1]==4:
+			if vars.map1.Map[self.x,self.y+1]==4 or vars.map1.Map[self.x,self.y+1]==1:
 				self.y+=1
 		elif num==4:
-			if vars.map1.Map[self.x-1,self.y]==4:
+			if vars.map1.Map[self.x-1,self.y]==4 or vars.map1.Map[self.x-1,self.y]==1:
 				self.x-=1
 		elif num==6:
-			if vars.map1.Map[self.x+1,self.y]==4:
+			if vars.map1.Map[self.x+1,self.y]==4 or vars.map1.Map[self.x+1,self.y]==1:
 				self.x+=1
 		elif num==8:
-			if vars.map1.Map[self.x,self.y-1]==4:
+			if vars.map1.Map[self.x,self.y-1]==4 or vars.map1.Map[self.x,self.y-1]==1:
 				self.y-=1
 
-	
 	def Draw(self):
 		if vars.curses:
-			attron(COLOR_PAIR(2))
-			mvaddstr(self.y,self.x,'@')
-			attroff(COLOR_PAIR(2))
+			funcs.DrawStringColor(2,self.sprite,x=self.x,y=self.y,bold=True,noclear=False)
+		if self.isplayer:
+			if vars.map1.Map[self.x-1,self.y-1]==1: funcs.DrawString('.',x=self.x-1,y=self.y-1,noclear=False)
+			if vars.map1.Map[self.x,self.y-1]==1: funcs.DrawString('.',x=self.x,y=self.y-1,noclear=False)
+			if vars.map1.Map[self.x+1,self.y-1]==1: funcs.DrawString('.',x=self.x+1,y=self.y-1,noclear=False)
+			if vars.map1.Map[self.x-1,self.y]==1: funcs.DrawString('.',x=self.x-1,y=self.y,noclear=False)
+			if vars.map1.Map[self.x+1,self.y]==1: funcs.DrawString('.',x=self.x+1,y=self.y,noclear=False)
+			if vars.map1.Map[self.x-1,self.y+1]==1: funcs.DrawString('.',x=self.x-1,y=self.y+1,noclear=False)
+			if vars.map1.Map[self.x,self.y+1]==1: funcs.DrawString('.',x=self.x,y=self.y+1,noclear=False)
+			if vars.map1.Map[self.x+1,self.y+1]==1: funcs.DrawString('.',x=self.x+1,y=self.y+1,noclear=False)
 
 	def Level(self,value=1):
 		self.level+=value
@@ -128,7 +189,10 @@ class Character:
 		self.children.append(child)
 		funcs.DrawString(self.name+' ('+str(self.id)+')'+' gives birth to '+child.name+' ('+str(child.id)+')')
 		return child
-			
+	
+	def GiveItem(self,item):
+		self.inventory.append(item)
+	
 	def ShowStats(self):
 		funcs.DrawString('Name: \t\t'+self.name)
 		funcs.DrawString('Race: \t\t'+self.race)

@@ -1,4 +1,5 @@
 curses=False
+running=True
 
 character=[]
 character_ID=[]

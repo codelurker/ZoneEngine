@@ -2,6 +2,9 @@ import vars,random,classes
 from unicurses import *
 
 random.seed()
+init_pair(1, COLOR_GREEN, COLOR_BLACK)
+init_pair(2, COLOR_CYAN, COLOR_BLACK)
+init_pair(3, COLOR_RED, COLOR_BLACK)
 
 def ID_Give():
 	vars.ID+=1
@@ -113,23 +116,26 @@ def DrawList(list):
 		else:
 			num=1
 
-def ClearLine(dist):
+def ClearLine(start,dist,y):
 	for a in range(dist):
-		mvaddstr(0,a," ")
+		mvaddstr(y,start+a," ")
 
-def DrawString(string1):
+def DrawString(string1,bold=False,x=0,y=0,noclear=True):
 	if vars.curses:
-		ClearLine(80)
-		mvaddstr(0,0,string1)
+		if noclear: ClearLine(len(string1),80,y)
+		if bold==True: attron(A_BOLD)
+		mvaddstr(y,x,string1)
+		if bold==True: attroff(A_BOLD)
 	else:
 		print string1
 
-def DrawStringColor(color1,string1):
+def DrawStringColor(color,string1,bold=False,x=0,y=0,noclear=True):
 	if vars.curses:
-		ClearLine(80)
-		attron(COLOR_PAIR(color1))
-		mvaddstr(0,0,string1)
-		attroff(COLOR_PAIR(color1))
+		if noclear: ClearLine(len(string1),80,y)
+		if bold==True: attron(A_BOLD)
+		attron(COLOR_PAIR(color))
+		mvaddstr(y,x,string1)
+		attroff(COLOR_PAIR(color))
+		if bold==True: attroff(A_BOLD)
 	else:
 		print string1
-		

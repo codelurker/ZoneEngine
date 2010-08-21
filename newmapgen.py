@@ -81,7 +81,15 @@ class Map:
 						if self.Map[x,y-1]!=1 and self.Map[x,y+1]!=1:
 							if self.Map[x-1,y]!=1 and self.Map[x+1,y]!=1:
 								self.Map[x,y]=4
-				except IndexError:
+					if self.Map[x,y]==6:
+						if self.Map[x,y-1]!=1 and self.Map[x,y+1]!=1:
+							if self.Map[x-1,y]!=1 and self.Map[x+1,y]!=1:
+								self.Map[x,y]=4
+							else:
+								self.Map[x,y]=4
+						else:
+							self.Map[x,y]=4
+				except:
 					pass
 
 class Room:
@@ -98,12 +106,18 @@ class Room:
 						if random.randint(0,6)<=3:
 							self.Tile[x,y]=5
 						else:
-							self.Tile[x,y]=3
+							if random.randint(0,40)<=3:
+								self.Tile[x,y]=6
+							else:
+								self.Tile[x,y]=3
 					if y==0 or y==self.sizeY-1:
 						if random.randint(0,6)<=3:
 							self.Tile[x,y]=5
 						else:
-							self.Tile[x,y]=3
+							if random.randint(0,40)<=3:
+								self.Tile[x,y]=6
+							else:
+								self.Tile[x,y]=3
 					if y>0 and y<self.sizeY-1:
 						if x>0 and x<self.sizeX-1:
 							self.Tile[x,y]=4
@@ -122,6 +136,7 @@ def Render(num):
 	if num==3: return "#"
 	if num==4: return "."
 	if num==5: return "#"
+	if num==6: return "#"
 
 #map1=Map(80,25)
 #map1.Generate()

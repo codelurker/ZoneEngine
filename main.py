@@ -33,20 +33,21 @@ vars.map1.Draw()
 
 adam=classes.Character(gender='Male',name='Adam',age=20)
 eve=classes.Character(gender='Female',name='Eve',age=20)
-#adam1=classes.Character(gender='Male',name='Adam1',age=20)
-#eve1=classes.Character(gender='Female',name='Eve1',age=20)
 player=classes.Character(isplayer=True,name='Player',gender="Male")
 
-funcs.Parents_MakeChild(eve,adam)
-#funcs.Parents_MakeChild(eve1,adam1)
+iwepDagger=classes.Item(owner=player)
 
-while ticks<100:
+funcs.Parents_MakeChild(eve,adam)
+player.Draw()
+
+while vars.running==True:
 	for char in vars.character:
 		vars.map1.DrawPos(char.x,char.y)
 		char.Tick()
-	ticks+=1
-	funcs.DrawStringColor(3,vars.TOPBAR)
+
+	funcs.DrawStringColor(3,vars.TOPBAR,bold=True)
 	if vars.curses: refresh()
 	time.sleep(0.01)
+	player.GetInput()
 
 if vars.curses: endwin()
