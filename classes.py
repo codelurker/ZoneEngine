@@ -155,16 +155,16 @@ class Character:
 
 	def MoveRandomize(self,xm=True,ym=True):
 		num=int(random.choice('2648'))
-		if num==2:
+		if num==2 and (self.y+1)<vars.map1.sizeY:
 			if vars.map1.Map[self.x,self.y+1]==4 or vars.map1.Map[self.x,self.y+1]==1:
 				self.y+=1
-		elif num==4:
+		elif num==4 and (self.x-1)<vars.map1.sizeX:
 			if vars.map1.Map[self.x-1,self.y]==4 or vars.map1.Map[self.x-1,self.y]==1:
 				self.x-=1
-		elif num==6:
+		elif num==6 and (self.x+1)<vars.map1.sizeX:
 			if vars.map1.Map[self.x+1,self.y]==4 or vars.map1.Map[self.x+1,self.y]==1:
 				self.x+=1
-		elif num==8:
+		elif num==8 and (self.y-1)<vars.map1.sizeY:
 			if vars.map1.Map[self.x,self.y-1]==4 or vars.map1.Map[self.x,self.y-1]==1:
 				self.y-=1
 
@@ -172,14 +172,25 @@ class Character:
 		if vars.curses:
 			funcs.DrawStringColor(2,self.sprite,x=self.x,y=self.y,bold=True,noclear=False)
 		if self.isplayer:
-			if vars.map1.Map[self.x-1,self.y-1]==1: funcs.DrawString('.',x=self.x-1,y=self.y-1,noclear=False)
-			if vars.map1.Map[self.x,self.y-1]==1: funcs.DrawString('.',x=self.x,y=self.y-1,noclear=False)
-			if vars.map1.Map[self.x+1,self.y-1]==1: funcs.DrawString('.',x=self.x+1,y=self.y-1,noclear=False)
-			if vars.map1.Map[self.x-1,self.y]==1: funcs.DrawString('.',x=self.x-1,y=self.y,noclear=False)
-			if vars.map1.Map[self.x+1,self.y]==1: funcs.DrawString('.',x=self.x+1,y=self.y,noclear=False)
-			if vars.map1.Map[self.x-1,self.y+1]==1: funcs.DrawString('.',x=self.x-1,y=self.y+1,noclear=False)
-			if vars.map1.Map[self.x,self.y+1]==1: funcs.DrawString('.',x=self.x,y=self.y+1,noclear=False)
-			if vars.map1.Map[self.x+1,self.y+1]==1: funcs.DrawString('.',x=self.x+1,y=self.y+1,noclear=False)
+			vars.map1.RedrawAll(1,pos=(self.x,self.y))
+			#for dist in range(3):
+			xdist=-2
+			ydist=-2
+			while ydist<=2:
+				while xdist<=2:
+					if xdist==0 and ydist==0:
+						pass
+					else:
+						if vars.map1.Map[self.x+xdist,self.y+ydist]==1: funcs.DrawString('.',x=self.x+xdist,y=self.y+ydist,noclear=False)
+					#if vars.map1.Map[self.x+dist,self.y-1]==1: funcs.DrawString('.',x=self.x+dist,y=self.y-1,noclear=False)
+					#if not tdist==0:
+					#	if vars.map1.Map[self.x+dist,self.y]==1: funcs.DrawString('.',x=self.x+dist,y=self.y,noclear=False)
+					#if vars.map1.Map[self.x+dist,self.y+1]==1: funcs.DrawString('.',x=self.x+dist,y=self.y+1,noclear=False)
+					#if xdist<2:
+					xdist+=1
+				if xdist>=2:
+					xdist=-2
+				ydist+=1
 
 	def Level(self,value=1):
 		self.level+=value

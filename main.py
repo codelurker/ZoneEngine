@@ -2,11 +2,11 @@ import classes,vars,random,sys,time
 import functions as funcs
 import newmapgen as map
 
-try:
-	if sys.argv[1]=='-curses':
-		vars.curses=True
-except IndexError:
-	print "No curses."
+#try:
+#	if sys.argv[1]=='-curses':
+#		vars.curses=True
+#except IndexError:
+#	print "No curses."
 
 vars.TOPBAR='ZoneEngine'
 

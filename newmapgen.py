@@ -56,11 +56,21 @@ class Map:
 					mvaddstr(y, x, Render(self.Map[x,y]))
 					attroff(COLOR_PAIR(1))
 				if self.Map[x,y]==3:
+					attron(A_ALTCHARSET)
 					mvaddstr(y, x, Render(self.Map[x,y]))
+					attroff(A_ALTCHARSET)
 				if self.Map[x,y]!=3 and self.Map[x,y]!=4 and self.Map[x,y]!=1:
 					mvaddstr(y, x, Render(self.Map[x,y]))
+	def RedrawAll(self,char,pos):
+		for y in range(self.sizeY):
+			for x in range(self.sizeX):
+				if self.Map[x,y]==char:
+					if x==pos[0] and y==pos[1]:
+						pass
+					else:
+						mvaddstr(y, x, Render(self.Map[x,y]))
+					
 	def DrawPos(self,x,y):
-		#mvaddstr(y, x, Render(self.Map[x,y]))
 		if self.Map[x,y]==1:
 			mvaddstr(y, x, Render(self.Map[x,y]))
 		if self.Map[x,y]==4:
@@ -68,9 +78,9 @@ class Map:
 			mvaddstr(y, x, Render(self.Map[x,y]))
 			attroff(COLOR_PAIR(1))
 		if self.Map[x,y]==3:
-			attron(A_ALTCHARSET)
+			#attron(A_ALTCHARSET)
 			mvaddstr(y, x, Render(self.Map[x,y]))
-			attroff(A_ALTCHARSET)
+			#attroff(A_ALTCHARSET)
 		if self.Map[x,y]!=3 and self.Map[x,y]!=4 and self.Map[x,y]!=1:
 			mvaddstr(y, x, Render(self.Map[x,y]))
 	def Dig(self):
@@ -134,6 +144,7 @@ def Render(num):
 	if num==1: return " "
 	if num==2: return "+"
 	if num==3: return "#"
+	#if num==3: return ACS_BLOCK
 	if num==4: return "."
 	if num==5: return "#"
 	if num==6: return "#"
