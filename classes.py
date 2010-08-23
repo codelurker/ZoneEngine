@@ -173,7 +173,6 @@ class Character:
 			funcs.DrawStringColor(2,self.sprite,x=self.x,y=self.y,bold=True,noclear=False)
 		if self.isplayer:
 			vars.map1.RedrawAll(1,pos=(self.x,self.y))
-			#for dist in range(3):
 			xdist=-2
 			ydist=-2
 			while ydist<=2:
@@ -181,12 +180,10 @@ class Character:
 					if xdist==0 and ydist==0:
 						pass
 					else:
-						if vars.map1.Map[self.x+xdist,self.y+ydist]==1: funcs.DrawString('.',x=self.x+xdist,y=self.y+ydist,noclear=False)
-					#if vars.map1.Map[self.x+dist,self.y-1]==1: funcs.DrawString('.',x=self.x+dist,y=self.y-1,noclear=False)
-					#if not tdist==0:
-					#	if vars.map1.Map[self.x+dist,self.y]==1: funcs.DrawString('.',x=self.x+dist,y=self.y,noclear=False)
-					#if vars.map1.Map[self.x+dist,self.y+1]==1: funcs.DrawString('.',x=self.x+dist,y=self.y+1,noclear=False)
-					#if xdist<2:
+						if vars.map1.Map[self.x+xdist,self.y+ydist]==1:
+							attron(COLOR_PAIR(1))
+							funcs.DrawString('.',x=self.x+xdist,y=self.y+ydist,noclear=False)
+							attroff(COLOR_PAIR(1))
 					xdist+=1
 				if xdist>=2:
 					xdist=-2

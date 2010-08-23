@@ -78,9 +78,7 @@ class Map:
 			mvaddstr(y, x, Render(self.Map[x,y]))
 			attroff(COLOR_PAIR(1))
 		if self.Map[x,y]==3:
-			#attron(A_ALTCHARSET)
 			mvaddstr(y, x, Render(self.Map[x,y]))
-			#attroff(A_ALTCHARSET)
 		if self.Map[x,y]!=3 and self.Map[x,y]!=4 and self.Map[x,y]!=1:
 			mvaddstr(y, x, Render(self.Map[x,y]))
 	def Dig(self):
@@ -144,14 +142,10 @@ def Render(num):
 	if num==1: return " "
 	if num==2: return "+"
 	if num==3: return "#"
-	#if num==3: return ACS_BLOCK
 	if num==4: return "."
 	if num==5: return "#"
 	if num==6: return "#"
 
-#map1=Map(80,25)
-#map1.Generate()
-#map1.Draw()
 mvaddstr(0, 0, ''+vars.MSG)
 refresh()
 endwin()
