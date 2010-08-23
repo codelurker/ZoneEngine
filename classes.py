@@ -1,4 +1,4 @@
-import vars,random
+import vars,random,threading
 import functions as funcs
 from unicurses import *
 vars.ID=0
@@ -7,6 +7,10 @@ random.seed()
 init_pair(1, COLOR_GREEN, COLOR_BLACK)
 init_pair(2, COLOR_CYAN, COLOR_BLACK)
 init_pair(3, COLOR_RED, COLOR_BLACK)
+
+class PlayerInput(threading.Thread):
+	def run(self):
+		while vars.running: vars.player.GetInput()
 
 class Void:
 	def __init__(self):
@@ -102,38 +106,42 @@ class Character:
 	
 	def GetInput(self):
 		finished=False
-		while finished==False:
-			key=wgetch(vars.screen)
-			if key==KEY_UP:
-				if vars.map1.Map[self.x,self.y-1]==4 or vars.map1.Map[self.x,self.y-1]==1:
-					vars.map1.DrawPos(self.x,self.y)
-					self.y-=1
-				finished=True
-			elif key==KEY_DOWN:
-				if vars.map1.Map[self.x,self.y+1]==4 or vars.map1.Map[self.x,self.y+1]==1:
-					vars.map1.DrawPos(self.x,self.y)
-					self.y+=1
-				finished=True
-			elif key==KEY_LEFT:
-				if vars.map1.Map[self.x-1,self.y]==4 or vars.map1.Map[self.x-1,self.y]==1:
-					vars.map1.DrawPos(self.x,self.y)
-					self.x-=1
-				finished=True
-			elif key==KEY_RIGHT:
-				if vars.map1.Map[self.x+1,self.y]==4 or vars.map1.Map[self.x+1,self.y]==1:
-					vars.map1.DrawPos(self.x,self.y)
-					self.x+=1
-				finished=True
-			elif key==ord('i'):
-				a=1
-				funcs.DrawStringColor(2,'Inventory',x=0,y=0)
-				for item in self.inventory:
-					funcs.DrawString(str(a)+') '+item.name,y=a)
-					a+=1
-				refresh()
-			elif key==ord('q'):
-				vars.running=False
-				finished=True
+		#while finished==False:
+		key=wgetch(vars.screen)
+		if key==KEY_UP:
+			if vars.map1.Map[self.x,self.y-1]==4 or vars.map1.Map[self.x,self.y-1]==1:
+				vars.map1.DrawPos(self.x,self.y)
+				self.y-=1
+				self.Draw()
+			finished=True
+		elif key==KEY_DOWN:
+			if vars.map1.Map[self.x,self.y+1]==4 or vars.map1.Map[self.x,self.y+1]==1:
+				vars.map1.DrawPos(self.x,self.y)
+				self.y+=1
+				self.Draw()
+			finished=True
+		elif key==KEY_LEFT:
+			if vars.map1.Map[self.x-1,self.y]==4 or vars.map1.Map[self.x-1,self.y]==1:
+				vars.map1.DrawPos(self.x,self.y)
+				self.x-=1
+				self.Draw()
+			finished=True
+		elif key==KEY_RIGHT:
+			if vars.map1.Map[self.x+1,self.y]==4 or vars.map1.Map[self.x+1,self.y]==1:
+				vars.map1.DrawPos(self.x,self.y)
+				self.x+=1
+				self.Draw()
+			finished=True
+		elif key==ord('i'):
+			a=1
+			funcs.DrawStringColor(2,'Inventory',x=0,y=0)
+			for item in self.inventory:
+				funcs.DrawString(str(a)+') '+item.name,y=a)
+				a+=1
+			refresh()
+		elif key==ord('q'):
+			vars.running=False
+			finished=True
 	
 	def Tick(self):
 		if self.ticks==20:
@@ -188,6 +196,7 @@ class Character:
 				if xdist>=2:
 					xdist=-2
 				ydist+=1
+			funcs.DrawStringColor(3,vars.TOPBAR,bold=True)
 
 	def Level(self,value=1):
 		self.level+=value
