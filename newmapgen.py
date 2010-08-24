@@ -23,7 +23,7 @@ class Map:
 	def Generate(self):
 		#Make some rooms
 		for a in range(13):
-			if a>=0:
+			if a>=3:
 				temp=Room(random.randint(10,15),random.randint(6,10))
 			else:
 				temp=Room(random.randint(5,10),random.randint(3,8),no_fill=True)
@@ -41,11 +41,18 @@ class Map:
 	def Place(self,room,x1=0,y1=0):
 		for y in range(room.sizeY):
 			for x in range(room.sizeX):
-				if self.Map[x1+x,y1+y]==1:
-					self.Map[x1+x,y1+y]=room.Tile[x,y]
+				if room.no_fill==False:
+					if self.Map[x1+x,y1+y]==1:
+						self.Map[x1+x,y1+y]=room.Tile[x,y]
+					else:
+						if y!=0 and y!=room.sizeY-1 and x!=0 and x!=room.sizeX-1:
+							self.Map[x1+x,y1+y]=4
 				else:
-					if y!=0 and y!=room.sizeY-1 and x!=0 and x!=room.sizeX-1:
-						self.Map[x1+x,y1+y]=4
+					#so no_fill = True here
+					#Every no_fill section is filled with #'s
+					#Can we figure out if this works?
+					if self.Map[x1+x,y1+y]>1:
+						self.Map[x1+x,y1+y]=3
 	def Draw(self):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
@@ -114,7 +121,7 @@ class Room:
 						if random.randint(0,6)<=3:
 							self.Tile[x,y]=5
 						else:
-							if random.randint(0,40)<=3:
+							if random.randint(0,40)<=7:
 								self.Tile[x,y]=6
 							else:
 								self.Tile[x,y]=3
@@ -122,7 +129,7 @@ class Room:
 						if random.randint(0,6)<=3:
 							self.Tile[x,y]=5
 						else:
-							if random.randint(0,40)<=3:
+							if random.randint(0,40)<=7:
 								self.Tile[x,y]=6
 							else:
 								self.Tile[x,y]=3
@@ -134,9 +141,9 @@ class Room:
 							self.Tile[x,y]=3
 					if y==0 or y==self.sizeY-1:
 							self.Tile[x,y]=3
-					if y>0 and y<self.sizeY-1:
-						if x>0 and x<self.sizeX-1:
-							self.Tile[x,y]=1
+					#if y>0 and y<self.sizeY-1:
+					#	if x>0 and x<self.sizeX-1:
+					#		self.Tile[x,y]=1
 		
 def Render(num):
 	if num==1: return " "
@@ -145,6 +152,7 @@ def Render(num):
 	if num==4: return "."
 	if num==5: return "#"
 	if num==6: return "#"
+	if num==7: return "?"
 
 mvaddstr(0, 0, ''+vars.MSG)
 refresh()

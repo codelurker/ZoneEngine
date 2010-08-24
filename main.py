@@ -35,7 +35,8 @@ adam=classes.Character(gender='Male',name='Adam',age=20)
 eve=classes.Character(gender='Female',name='Eve',age=20)
 vars.player=classes.Character(isplayer=True,name='Player',gender="Male")
 
-iwepDagger=classes.Item(owner=vars.player)
+iwepDagger=classes.Item(owner=vars.player,name='Dagger')
+iwepSword=classes.Item(owner=vars.player,name='Sword')
 
 funcs.Parents_MakeChild(eve,adam)
 vars.player.Draw()

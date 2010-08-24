@@ -95,7 +95,7 @@ def Self_PutOnMap(character):
 	for y1 in range(vars.map1.sizeY):
 			for x1 in range(vars.map1.sizeX):
 				if vars.map1.Map[x1,y1]==4:
-					if random.randint(1,20)<8:
+					if random.randint(1,20)<3:
 						character.x=x1
 						character.y=y1
 						return

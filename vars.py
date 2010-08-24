@@ -4,6 +4,8 @@ paused=False
 
 character=[]
 character_ID=[]
+item=[]
+item_ID=[]
 
 femalename=['Aidan','Abby','April']
 malename=['Aaron','Arod','Luke']

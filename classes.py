@@ -20,7 +20,8 @@ class Void:
 vars.VOID=Void()
 
 class Item:
-	def __init__(self,name='null',type='null',x=-1,y=-1,owner=None):
+	def __init__(self,name='null',type='null',sprite='^',x=-1,y=-1,owner=None):
+		vars.item.append(self)
 		self.name=name
 		self.type=type
 		self.x=x
@@ -29,6 +30,8 @@ class Item:
 		
 		if owner!=None:
 			owner.GiveItem(self)
+	def Draw(self):
+		funcs.DrawString(self.sprite,x=self.x,y=self.y)
 
 class Character:
 	def __init__(self,isplayer=False,initial=False,father=vars.VOID,mother=vars.VOID,gender="",name="null",race="null",age=0):
