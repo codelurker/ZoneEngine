@@ -42,19 +42,18 @@ vars.player.Draw()
 
 class GameThread(threading.Thread):
 	def run(self):
-		#if vars.running==True:
 		while 1:
+			while vars.paused:
+				pass
 			for char in vars.character:
 				vars.map1.DrawPos(char.x,char.y)
 				char.Tick()
 			funcs.DrawStringColor(3,vars.TOPBAR,bold=True)
 			refresh()
-			time.sleep(0.3)
+			time.sleep(0.2)
 			if vars.running==False:
 				endwin()
 				sys.exit()
-		#else:
-		#	if vars.curses: endwin()
 
 GameThread().start()
 classes.PlayerInput().start()

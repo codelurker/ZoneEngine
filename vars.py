@@ -1,5 +1,6 @@
 curses=False
 running=True
+paused=False
 
 character=[]
 character_ID=[]

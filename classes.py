@@ -40,6 +40,8 @@ class Character:
 		self.last_x=0
 		self.last_y=0
 		self.ticks=0
+		self.moveticks_max=2
+		self.moveticks=random.randint(0,self.moveticks_max)
 		vars.character.append(self)
 		self.sprite='@'
 		
@@ -105,34 +107,44 @@ class Character:
 		funcs.Self_PutOnMap(self)
 	
 	def GetInput(self):
-		finished=False
-		#while finished==False:
 		key=wgetch(vars.screen)
 		if key==KEY_UP:
 			if vars.map1.Map[self.x,self.y-1]==4 or vars.map1.Map[self.x,self.y-1]==1:
-				vars.map1.DrawPos(self.x,self.y)
-				self.y-=1
-				self.Draw()
-			finished=True
+				if self.y>0:
+					vars.map1.DrawPos(self.x,self.y)
+					self.y-=1
+					self.Draw()
+			if vars.paused==True:
+				vars.paused=False
 		elif key==KEY_DOWN:
 			if vars.map1.Map[self.x,self.y+1]==4 or vars.map1.Map[self.x,self.y+1]==1:
-				vars.map1.DrawPos(self.x,self.y)
-				self.y+=1
-				self.Draw()
-			finished=True
+				if self.y<vars.map1.sizeY-2:
+					vars.map1.DrawPos(self.x,self.y)
+					self.y+=1
+					self.Draw()
+			if vars.paused==True:
+				vars.paused=False
 		elif key==KEY_LEFT:
 			if vars.map1.Map[self.x-1,self.y]==4 or vars.map1.Map[self.x-1,self.y]==1:
-				vars.map1.DrawPos(self.x,self.y)
-				self.x-=1
-				self.Draw()
-			finished=True
+				if self.x>0:
+					vars.map1.DrawPos(self.x,self.y)
+					self.x-=1
+					self.Draw()
+			if vars.paused==True:
+				vars.paused=False
 		elif key==KEY_RIGHT:
 			if vars.map1.Map[self.x+1,self.y]==4 or vars.map1.Map[self.x+1,self.y]==1:
-				vars.map1.DrawPos(self.x,self.y)
-				self.x+=1
-				self.Draw()
-			finished=True
+				if self.x<vars.map1.sizeX-2:
+					vars.map1.DrawPos(self.x,self.y)
+					self.x+=1
+					self.Draw()
+			if vars.paused==True:
+				vars.paused=False
 		elif key==ord('i'):
+			if vars.paused==True:
+				vars.paused=False
+			else:
+				vars.paused=True
 			a=1
 			funcs.DrawStringColor(2,'Inventory',x=0,y=0)
 			for item in self.inventory:
@@ -141,7 +153,6 @@ class Character:
 			refresh()
 		elif key==ord('q'):
 			vars.running=False
-			finished=True
 	
 	def Tick(self):
 		if self.ticks==20:
@@ -157,7 +168,11 @@ class Character:
 				child=self.HasChild()
 
 		if not self.isplayer:
-			self.MoveRandomize()
+			if self.moveticks<=0:
+				self.MoveRandomize()
+				self.moveticks=self.moveticks_max
+			else:
+				self.moveticks-=1
 		self.Draw()
 		self.ticks+=1
 
@@ -188,10 +203,11 @@ class Character:
 					if xdist==0 and ydist==0:
 						pass
 					else:
-						if vars.map1.Map[self.x+xdist,self.y+ydist]==1:
-							attron(COLOR_PAIR(1))
-							funcs.DrawString('.',x=self.x+xdist,y=self.y+ydist,noclear=False)
-							attroff(COLOR_PAIR(1))
+						if self.y+ydist<vars.map1.sizeY and self.x+xdist<vars.map1.sizeX:
+							if vars.map1.Map[self.x+xdist,self.y+ydist]==1:
+								attron(COLOR_PAIR(1))
+								funcs.DrawString('.',x=self.x+xdist,y=self.y+ydist,noclear=False)
+								attroff(COLOR_PAIR(1))
 					xdist+=1
 				if xdist>=2:
 					xdist=-2
