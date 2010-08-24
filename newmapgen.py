@@ -151,7 +151,7 @@ def Render(num):
 	if num==3: return "#"
 	if num==4: return "."
 	if num==5: return "#"
-	if num==6: return "#"
+	if num==6: return "?"
 	if num==7: return "?"
 
 mvaddstr(0, 0, ''+vars.MSG)
