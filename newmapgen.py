@@ -1,4 +1,4 @@
-import random,numpy,time,vars
+import random,numpy,time,vars,math
 from numpy import *
 from math import *
 from unicurses import *
@@ -68,6 +68,11 @@ class Map:
 					attroff(A_ALTCHARSET)
 				if self.Map[x,y]!=3 and self.Map[x,y]!=4 and self.Map[x,y]!=1:
 					mvaddstr(y, x, Render(self.Map[x,y]))
+	def DrawCustom(self,array):
+		for y in range(self.sizeY):
+			for x in range(self.sizeX):
+				mvaddstr(y, x, RenderCustom(array[x,y]))
+				#mvaddstr(y, x, str(array[x,y]).rpartition('.')[0])
 	def RedrawAll(self,char,pos):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
@@ -76,7 +81,6 @@ class Map:
 						pass
 					else:
 						mvaddstr(y, x, Render(self.Map[x,y]))
-					
 	def DrawPos(self,x,y):
 		if self.Map[x,y]==1:
 			mvaddstr(y, x, Render(self.Map[x,y]))
@@ -103,9 +107,53 @@ class Map:
 							else:
 								self.Map[x,y]=4
 						else:
-							self.Map[x,y]=4
+							self.Map[x,y]=3
 				except:
 					pass
+		
+	def MakePath(self,x1,y1,x2,y2):
+		#0	Scanned and closed
+		#1	Not scanned
+		#2	Scanned and open
+		self.AI_Open=ones((self.sizeX,self.sizeY))
+		self.AI_G=ones((self.sizeX,self.sizeY))
+		self.AI_H=ones((self.sizeX,self.sizeY))
+		self.AI_F=ones((self.sizeX,self.sizeY))
+		
+		max_x=5
+		max_y=5
+		
+		for y in range(self.sizeY):
+			for x in range(self.sizeX):
+				self.AI_G[x,y]=0
+		
+		#Scan the starting area
+		xdist=-(max_x)
+		ydist=-(max_y)
+		while ydist<=(max_y):
+			while xdist<=(max_x):
+				if xdist==0 and ydist==0:
+					self.AI_Open[x1,y1]=2
+				else:
+					if y1+ydist<vars.map1.sizeY and x1+xdist<vars.map1.sizeX:
+						#If walkable
+						if vars.map1.Map[x1+xdist,y1+ydist]==1:
+							#Changed to 'Scanned and Open'
+							self.AI_Open[x1+xdist,y1+ydist]=2
+							#Calculate moves required
+							self.AI_G[x1+xdist,y1+ydist]=(abs(xdist)+abs(ydist))
+				xdist+=1
+			if xdist>=(max_x):
+				xdist=-(max_x)
+			ydist+=1
+		
+		return self.AI_G
+
+class Node:
+	def __init__(self,x1,y1,parent,noparent=False):
+		self.x=x1
+		self.y=y1
+		if noparent==False: self.parent=parent
 
 class Room:
 	def __init__(self,x1,y1,no_fill=False):
@@ -154,6 +202,22 @@ def Render(num):
 	if num==6: return "?"
 	if num==7: return "?"
 
-mvaddstr(0, 0, ''+vars.MSG)
+def RenderCustom(num):
+	if num==0: return " "
+	if num==1: return "1"
+	if num==2: return "2"
+	if num==3: return "3"
+	if num==4: return "4"
+	if num==5: return "5"
+	if num==6: return "6"
+	if num==7: return "7"
+	if num==8: return "8"
+	if num==9: return "9"
+	if num>=10: return " "
+
+vars.map1=Map(80,25)
+#vars.map1.Generate()
+
+vars.map1.DrawCustom(vars.map1.MakePath(20,10,0,0))
 refresh()
 endwin()

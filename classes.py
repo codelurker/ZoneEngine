@@ -89,16 +89,37 @@ class Character:
 		self.Self_SocialMaleElf=50
 		funcs.Self_GetSocial(self)
 		
-		#The mental state of the character.
-		#1 - Suicidal
-		#2 - Depressed
-		#3 - Down
-		#4 - Content
-		#5 - Well
-		#6 - Good
-		#Self_MentalState is gradiently controlled by Self_Mental.
-		self.Self_MentalState=4
-		self.Self_Mental=40
+		#Sadness
+		#0-24	Grief
+		#25-49	Sorrow
+		#50-75	Gloominess
+		#76-100	Neutral
+		self.Self_Sadness=4
+		self.Self_SadnessVal=100
+		
+		#Fear
+		#0-24	Terror
+		#25-49	Panic
+		#50-75	apprehension
+		#76-100	Neutral
+		self.Self_Fear=4
+		self.Self_FearVal=100
+		
+		#Surprise
+		#0-24	Amazement
+		#25-49	Uncertainty
+		#50-75	Distraction
+		#76-100	Neutral
+		self.Self_Surprise=4
+		self.Self_SurpriseVal=100
+		
+		#Joy
+		#0-24	Extasy
+		#25-49	Elation
+		#50-75	Serenity
+		#76-100	Neutral
+		self.Self_Joy=4
+		self.Self_JoyVal=100
 		
 		#Tracking
 		self.status='ready'
