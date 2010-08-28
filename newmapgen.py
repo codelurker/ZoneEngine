@@ -120,8 +120,11 @@ class Map:
 		self.AI_H=ones((self.sizeX,self.sizeY))
 		self.AI_F=ones((self.sizeX,self.sizeY))
 		
-		max_x=5
-		max_y=5
+		max_x=1
+		max_y=1
+		
+		start_node=Node(x1,y1,0,noparent=True)
+		prev_parent=start_node
 		
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
@@ -140,6 +143,8 @@ class Map:
 						if vars.map1.Map[x1+xdist,y1+ydist]==1:
 							#Changed to 'Scanned and Open'
 							self.AI_Open[x1+xdist,y1+ydist]=2
+							#Create node here
+							temp=Node(x1+xdist,y1+ydist,abs(xdist)+abs(ydist),parent=prev_parent,status=2)
 							#Calculate moves required
 							self.AI_G[x1+xdist,y1+ydist]=(abs(xdist)+abs(ydist))
 				xdist+=1
@@ -147,10 +152,12 @@ class Map:
 				xdist=-(max_x)
 			ydist+=1
 		
+		#Start scanning open nodes
+		
 		return self.AI_G
 
 class Node:
-	def __init__(self,x1,y1,parent,noparent=False):
+	def __init__(self,x1,y1,g,parent=None,status=1,noparent=False):
 		self.x=x1
 		self.y=y1
 		if noparent==False: self.parent=parent
@@ -217,7 +224,7 @@ def RenderCustom(num):
 
 vars.map1=Map(80,25)
 #vars.map1.Generate()
-
+vars.map1.Map[18,9]=3
 vars.map1.DrawCustom(vars.map1.MakePath(20,10,0,0))
 refresh()
 endwin()
