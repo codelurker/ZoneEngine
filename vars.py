@@ -7,6 +7,8 @@ character_ID=[]
 item=[]
 item_ID=[]
 
+AI_Nodes=[]
+
 femalename=['Aidan','Abby','April']
 malename=['Aaron','Arod','Luke']
 lastname=['Test']

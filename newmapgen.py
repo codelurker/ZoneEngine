@@ -73,6 +73,9 @@ class Map:
 			for x in range(self.sizeX):
 				mvaddstr(y, x, RenderCustom(array[x,y]))
 				#mvaddstr(y, x, str(array[x,y]).rpartition('.')[0])
+	def DrawNodes(self):
+		for node in vars.AI_Nodes:
+			mvaddstr(node.y, node.x, str(node.f))
 	def RedrawAll(self,char,pos):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
@@ -114,8 +117,10 @@ class Map:
 	def MakePath(self,x1,y1,x2,y2):
 		#0	Scanned and closed
 		#1	Not scanned
-		#2	Scanned and open
+		#2	Scanned and open to be considered
 		self.AI_Open=ones((self.sizeX,self.sizeY))
+		vars.AI_OpenList=[]
+		vars.AI_Map=ones((self.sizeX,self.sizeY))
 		self.AI_G=ones((self.sizeX,self.sizeY))
 		self.AI_H=ones((self.sizeX,self.sizeY))
 		self.AI_F=ones((self.sizeX,self.sizeY))
@@ -124,11 +129,11 @@ class Map:
 		max_y=1
 		
 		start_node=Node(x1,y1,0,noparent=True)
-		prev_parent=start_node
 		
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
 				self.AI_G[x,y]=0
+				vars.AI_Map[x,y]=0
 		
 		#Scan the starting area
 		xdist=-(max_x)
@@ -136,31 +141,86 @@ class Map:
 		while ydist<=(max_y):
 			while xdist<=(max_x):
 				if xdist==0 and ydist==0:
-					self.AI_Open[x1,y1]=2
+					self.AI_Open[x1,y1]=0
 				else:
 					if y1+ydist<vars.map1.sizeY and x1+xdist<vars.map1.sizeX:
 						#If walkable
 						if vars.map1.Map[x1+xdist,y1+ydist]==1:
 							#Changed to 'Scanned and Open'
-							self.AI_Open[x1+xdist,y1+ydist]=2
+							#self.AI_Open[x1+xdist,y1+ydist]=2
 							#Create node here
-							temp=Node(x1+xdist,y1+ydist,abs(xdist)+abs(ydist),parent=prev_parent,status=2)
+							temp=Node(x1+xdist,y1+ydist,abs(xdist)+abs(ydist),parent=start_node,status=2)
+							temp.FindDist(x2,y2)
 							#Calculate moves required
-							self.AI_G[x1+xdist,y1+ydist]=(abs(xdist)+abs(ydist))
+							#Might not need this if I'm already giving the node a G value
+							self.AI_G[x1+xdist,y1+ydist]=temp.g
 				xdist+=1
 			if xdist>=(max_x):
 				xdist=-(max_x)
 			ydist+=1
 		
-		#Start scanning open nodes
+		#do it four times
+		for a in range(4):
+			#Start scanning open nodes
+			next_node=FindLowest()		
+			
+			#Search for new areas around next_node
+			SearchArea(next_node,x2,y2)
+
+def SearchArea(node,end_x,end_y):
+	max_x=1
+	max_y=1
 		
-		return self.AI_G
+	xdist=-(max_x)
+	ydist=-(max_y)
+	while ydist<=(max_y):
+		while xdist<=(max_x):
+			if xdist==0 and ydist==0:
+				pass
+			else:
+				if node.y+ydist<vars.map1.sizeY and node.x+xdist<vars.map1.sizeX:
+					#If walkable
+					if vars.map1.Map[node.x+xdist,node.y+ydist]==1 and vars.AI_Map[node.x+xdist,node.y+ydist]==0:
+						temp=Node(node.x+xdist,node.y+ydist,abs(xdist)+abs(ydist),parent=node,status=2)
+						temp.FindDist(end_x,end_y)
+			xdist+=1
+		if xdist>=(max_x):
+			xdist=-(max_x)
+		ydist+=1
+
+def FindLowest():
+	#Start scanning open nodes
+	lowest=None
+	current_lowest=None
+	for item in vars.AI_OpenList:
+		if current_lowest==None:
+			current_lowest=item
+		else:
+			if item.f<current_lowest.f:
+				current_lowest=item
+	
+	current_lowest.status=0
+	vars.lowest=str(current_lowest.x)+','+str(current_lowest.y)
+	return current_lowest
 
 class Node:
 	def __init__(self,x1,y1,g,parent=None,status=1,noparent=False):
 		self.x=x1
 		self.y=y1
-		if noparent==False: self.parent=parent
+		self.g=g
+		self.h=0
+		self.f=0
+		self.status=status
+		if noparent==False:
+			self.parent=parent
+			vars.AI_OpenList.append(self)
+			vars.AI_Map[self.x,self.y]=1
+		vars.AI_Nodes.append(self)
+		
+	def FindDist(self,x2,y2):
+		#Manhattan method
+		self.h=abs(self.x-x2)+abs(self.y-y2)
+		self.f=self.g+self.h
 
 class Room:
 	def __init__(self,x1,y1,no_fill=False):
@@ -225,6 +285,11 @@ def RenderCustom(num):
 vars.map1=Map(80,25)
 #vars.map1.Generate()
 vars.map1.Map[18,9]=3
-vars.map1.DrawCustom(vars.map1.MakePath(20,10,0,0))
+vars.map1.MakePath(20,10,15,8)
+#vars.map1.DrawCustom(vars.map1.MakePath(20,10,0,0))
+vars.map1.DrawNodes()
+mvaddstr(8, 15, 'F')
+mvaddstr(10, 20, 'S')
+#mvaddstr(0, 0, vars.lowest)
 refresh()
 endwin()
