@@ -3,7 +3,7 @@ from numpy import *
 from math import *
 from unicurses import *
 from time import time
-stdscr = initscr()
+"""stdscr = initscr()
 noecho()
 cbreak()
 curs_set(0)
@@ -11,7 +11,7 @@ keypad(stdscr, True)
 start_color()
 init_pair(1, COLOR_GREEN, COLOR_BLACK)
 init_pair(2, COLOR_GREEN, COLOR_BLACK)
-random.seed()
+random.seed()"""
 vars.MSG="ZoneEngine"
 vars.MSG2=">Randomized..."
 
@@ -122,6 +122,7 @@ class Map:
 		#2	Scanned and open to be considered
 		self.AI_Open=ones((self.sizeX,self.sizeY))
 		vars.AI_OpenList=[]
+		vars.AI_Pathlist=[]
 		vars.AI_Map=ones((self.sizeX,self.sizeY))
 		self.AI_G=ones((self.sizeX,self.sizeY))
 		self.AI_H=ones((self.sizeX,self.sizeY))
@@ -186,6 +187,10 @@ class Map:
 			if fail>=10:
 				sys.exit()
 
+def ShowPath():
+	for node in vars.AI_Pathlist:
+		mvaddstr(node[1], node[0], '.')
+
 def SearchArea(node,end_x,end_y):
 	max_x=1
 	max_y=1
@@ -201,7 +206,10 @@ def SearchArea(node,end_x,end_y):
 					#If walkable
 					if vars.map1.Map[node.x+xdist,node.y+ydist]==1 or vars.map1.Map[node.x+xdist,node.y+ydist]==4: 
 						if vars.AI_Map[node.x+xdist,node.y+ydist]==0:
+							#Doesn't take the G value from the parent...
+							#It's faster, but I don't know how good it is yet
 							temp=Node(node.x+xdist,node.y+ydist,abs(xdist)+abs(ydist),parent=node,status=2)
+							#temp=Node(node.x+xdist,node.y+ydist,node.g+(abs(xdist)+abs(ydist)),parent=node,status=2)
 							temp.FindDist(end_x,end_y)
 			xdist+=1
 		if xdist>=(max_x):
@@ -226,6 +234,7 @@ def FindLowest():
 	if current_lowest==None:
 		pass
 	else:
+		vars.AI_Pathlist.append((current_lowest.x,current_lowest.y))
 		return current_lowest
 
 class Node:
@@ -307,12 +316,12 @@ def RenderCustom(num):
 	if num==9: return "9"
 	if num>=10: return "?"
 
-map_gen_time = time()
-vars.map1=Map(80,25)
-vars.map1.Generate()
-map_gen_time_end = time()
+#map_gen_time = time()
+#vars.map1=Map(80,25)
+#vars.map1.Generate()
+#map_gen_time_end = time()
 #vars.map1.Map[18,9]=3
-start_x=random.randint(5,75)
+"""start_x=random.randint(5,75)
 start_y=random.randint(5,22)
 exit_x=random.randint(5,75)
 exit_y=random.randint(5,22)
@@ -320,12 +329,13 @@ path_gen_time = time()
 vars.map1.MakePath(start_x,start_y,exit_x,exit_y)
 #vars.map1.DrawCustom(vars.map1.MakePath(20,10,0,0))
 vars.map1.Draw()
-vars.map1.DrawNodes()
+#vars.map1.DrawNodes()
+ShowPath()
 path_gen_time_end=time()
 mvaddstr(start_y, start_x, 'S')
 mvaddstr(exit_y, exit_x, 'F')
 mvaddstr(0, 0, ' Map generated in '+str(map_gen_time_end-map_gen_time))
 mvaddstr(1, 0, 'Path generated in '+str(path_gen_time_end-path_gen_time))
-mvaddstr(2, 0, '            Total '+str((map_gen_time_end-map_gen_time)+(path_gen_time_end-path_gen_time)))
-refresh()
-endwin()
+mvaddstr(2, 0, '            Total '+str((map_gen_time_end-map_gen_time)+(path_gen_time_end-path_gen_time)))"""
+#refresh()
+#endwin()

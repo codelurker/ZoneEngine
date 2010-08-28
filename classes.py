@@ -1,5 +1,6 @@
 import vars,random,threading
 import functions as funcs
+import astar as astar
 from unicurses import *
 vars.ID=0
 random.seed()
@@ -47,6 +48,11 @@ class Character:
 		self.moveticks=random.randint(0,self.moveticks_max)
 		vars.character.append(self)
 		self.sprite='@'
+
+		#A*
+		self.OnPath=False
+		self.CurrentPath=None
+		self.CurrentPath_Number=0
 		
 		#Character history
 		self.age=age
@@ -193,13 +199,25 @@ class Character:
 
 		if not self.isplayer:
 			if self.moveticks<=0:
-				self.MoveRandomize()
+				#self.MoveRandomize()
+				if self.OnPath==True:
+					if self.CurrentPath_Number<len(self.CurrentPath):
+						self.x=self.CurrentPath[self.CurrentPath_Number][0]
+						self.y=self.CurrentPath[self.CurrentPath_Number][1]
+						self.CurrentPath_Number+=1
+						#pass
+				else:
+					self.CurrentPath=astar.MakePath(self.x,self.y,10,10)
+					#self.CurrentPath=astar.MakePath(20,20,10,10)
+					self.CurrentPath_Number=0
+					self.OnPath=True
+					
 				self.moveticks=self.moveticks_max
 			else:
 				self.moveticks-=1
 		self.Draw()
 		self.ticks+=1
-
+	
 	def MoveRandomize(self,xm=True,ym=True):
 		num=int(random.choice('2648'))
 		if num==2 and (self.y+1)<vars.map1.sizeY:

@@ -1,7 +1,6 @@
 import classes,vars,random,sys,time,threading
-import functions as funcs
 import newmapgen as map
-
+import functions as funcs
 #try:
 #	if sys.argv[1]=='-curses':
 #		vars.curses=True
@@ -51,7 +50,7 @@ class GameThread(threading.Thread):
 				char.Tick()
 			funcs.DrawStringColor(3,vars.TOPBAR,bold=True)
 			refresh()
-			time.sleep(0.2)
+			time.sleep(0.1)
 			if vars.running==False:
 				endwin()
 				sys.exit()
