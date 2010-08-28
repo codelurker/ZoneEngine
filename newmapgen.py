@@ -75,7 +75,8 @@ class Map:
 				#mvaddstr(y, x, str(array[x,y]).rpartition('.')[0])
 	def DrawNodes(self):
 		for node in vars.AI_Nodes:
-			mvaddstr(node.y, node.x, str(node.f))
+			#mvaddstr(node.y, node.x, RenderCustom(node.f))
+			mvaddstr(node.y, node.x, '.')
 	def RedrawAll(self,char,pos):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
@@ -124,6 +125,7 @@ class Map:
 		self.AI_G=ones((self.sizeX,self.sizeY))
 		self.AI_H=ones((self.sizeX,self.sizeY))
 		self.AI_F=ones((self.sizeX,self.sizeY))
+		vars.exit_found=False
 		
 		max_x=1
 		max_y=1
@@ -159,13 +161,29 @@ class Map:
 				xdist=-(max_x)
 			ydist+=1
 		
-		#do it four times
-		for a in range(4):
+		#GO!
+		step_max=50
+		step=0
+		fail=0
+
+		while vars.exit_found==False:
 			#Start scanning open nodes
-			next_node=FindLowest()		
+			next_node=FindLowest()	
 			
-			#Search for new areas around next_node
-			SearchArea(next_node,x2,y2)
+			if next_node!=None:
+				if next_node.x==x2 and next_node.y==y2:
+					vars.exit_found=True
+				else:
+					#Search for new areas around next_node
+					SearchArea(next_node,x2,y2)
+			
+			step+=1
+			if step>=step_max:
+				next_node=start_node
+				step=0
+				fail+=1
+			if fail>=10:
+				sys.exit()
 
 def SearchArea(node,end_x,end_y):
 	max_x=1
@@ -180,9 +198,10 @@ def SearchArea(node,end_x,end_y):
 			else:
 				if node.y+ydist<vars.map1.sizeY and node.x+xdist<vars.map1.sizeX:
 					#If walkable
-					if vars.map1.Map[node.x+xdist,node.y+ydist]==1 and vars.AI_Map[node.x+xdist,node.y+ydist]==0:
-						temp=Node(node.x+xdist,node.y+ydist,abs(xdist)+abs(ydist),parent=node,status=2)
-						temp.FindDist(end_x,end_y)
+					if vars.map1.Map[node.x+xdist,node.y+ydist]==1 or vars.map1.Map[node.x+xdist,node.y+ydist]==4: 
+						if vars.AI_Map[node.x+xdist,node.y+ydist]==0:
+							temp=Node(node.x+xdist,node.y+ydist,abs(xdist)+abs(ydist),parent=node,status=2)
+							temp.FindDist(end_x,end_y)
 			xdist+=1
 		if xdist>=(max_x):
 			xdist=-(max_x)
@@ -196,12 +215,17 @@ def FindLowest():
 		if current_lowest==None:
 			current_lowest=item
 		else:
-			if item.f<current_lowest.f:
+			if item.f<current_lowest.f and item.status==2:
 				current_lowest=item
+				vars.lowest=str(current_lowest.x)+','+str(current_lowest.y)
+		
+		if current_lowest!=None:
+			current_lowest.status=0
 	
-	current_lowest.status=0
-	vars.lowest=str(current_lowest.x)+','+str(current_lowest.y)
-	return current_lowest
+	if current_lowest==None:
+		pass
+	else:
+		return current_lowest
 
 class Node:
 	def __init__(self,x1,y1,g,parent=None,status=1,noparent=False):
@@ -280,16 +304,21 @@ def RenderCustom(num):
 	if num==7: return "7"
 	if num==8: return "8"
 	if num==9: return "9"
-	if num>=10: return " "
+	if num>=10: return "?"
 
 vars.map1=Map(80,25)
-#vars.map1.Generate()
-vars.map1.Map[18,9]=3
-vars.map1.MakePath(20,10,15,8)
+vars.map1.Generate()
+#vars.map1.Map[18,9]=3
+start_x=random.randint(20,75)
+start_y=random.randint(10,22)
+exit_x=5
+exit_y=5
+vars.map1.MakePath(start_x,start_y,exit_x,exit_y)
 #vars.map1.DrawCustom(vars.map1.MakePath(20,10,0,0))
+vars.map1.Draw()
 vars.map1.DrawNodes()
-mvaddstr(8, 15, 'F')
-mvaddstr(10, 20, 'S')
+mvaddstr(start_y, start_x, 'S')
+mvaddstr(exit_y, exit_x, 'F')
 #mvaddstr(0, 0, vars.lowest)
 refresh()
 endwin()
