@@ -2,6 +2,7 @@ import random,numpy,time,vars,math
 from numpy import *
 from math import *
 from unicurses import *
+from time import time
 stdscr = initscr()
 noecho()
 cbreak()
@@ -306,19 +307,25 @@ def RenderCustom(num):
 	if num==9: return "9"
 	if num>=10: return "?"
 
+map_gen_time = time()
 vars.map1=Map(80,25)
 vars.map1.Generate()
+map_gen_time_end = time()
 #vars.map1.Map[18,9]=3
-start_x=random.randint(20,75)
-start_y=random.randint(10,22)
-exit_x=5
-exit_y=5
+start_x=random.randint(5,75)
+start_y=random.randint(5,22)
+exit_x=random.randint(5,75)
+exit_y=random.randint(5,22)
+path_gen_time = time()
 vars.map1.MakePath(start_x,start_y,exit_x,exit_y)
 #vars.map1.DrawCustom(vars.map1.MakePath(20,10,0,0))
 vars.map1.Draw()
 vars.map1.DrawNodes()
+path_gen_time_end=time()
 mvaddstr(start_y, start_x, 'S')
 mvaddstr(exit_y, exit_x, 'F')
-#mvaddstr(0, 0, vars.lowest)
+mvaddstr(0, 0, ' Map generated in '+str(map_gen_time_end-map_gen_time))
+mvaddstr(1, 0, 'Path generated in '+str(path_gen_time_end-path_gen_time))
+mvaddstr(2, 0, '            Total '+str((map_gen_time_end-map_gen_time)+(path_gen_time_end-path_gen_time)))
 refresh()
 endwin()
