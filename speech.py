@@ -13,6 +13,12 @@ class dummy:
 a = dummy('Adam')
 b = dummy('Eve')
 
+class Conversation:
+	def __init__(self,a,b):
+		self.weight=0
+		self.a=a
+		self.b=b
+
 def Greeting(a,b):
 	#a = you
 	#b = them
