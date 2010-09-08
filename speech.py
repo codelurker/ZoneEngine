@@ -7,11 +7,15 @@ greeting_neutral=[]
 greeting_negative=[]
 
 class dummy:
-	def __init__(self,name):
+	def __init__(self,name,gender,race):
 		self.name=name
-
-a = dummy('Adam')
-b = dummy('Eve')
+		self.gender=gender
+		self.race=race
+		self.Self_SocialFemaleHuman=70
+		self.Self_SocialMaleHuman=70
+		
+a = dummy('Adam','Male','Human')
+b = dummy('Eve','Female','Human')
 
 class SpeechClass(object):
 	def get(self):
@@ -31,18 +35,22 @@ greeting_neutral.append(Greeting('Hello, %other.name%.',0))
 greeting_negative.append(Greeting('%ignore%',-1))
 
 class Conversation:
-	def __init__(self,a,b,type):
+	def __init__(self,a,b,start_line):
 		#self.weight=0
 		self.a=a
 		self.b=b
-		self.type=type
-	def start(self,type):
+		#self.type=type
+		self.start_line=start_line
+		self.type=self.start_line.type
+		#if start_line.type=='Greeting':
+		#	start('greeting')
+		self.start()
+	def start(self):
 		self.done=False
-		self.log=[]
-		while not self.done:
-			if len(self.log)==0:
-				r=Response(type)
-				#r.
+		if self.type=='greeting':
+			resp=GetGreeting(self.a,self.b)
+			RenderResponse(self.a,self.b,resp)
+			
 
 def GetGreeting(a,b):
 	#a = you
@@ -56,9 +64,9 @@ def GetGreeting(a,b):
 					FindGreeting(a.Self_SocialMaleHuman)
 			else:
 				if a.gender=='Male':
-					FindGreeting(a.Self_SocialFemaleHuman)
+					return FindGreeting(a.Self_SocialFemaleHuman)
 				else:
-					FindGreeting(a.Self_SocialMaleHuman)
+					return FindGreeting(a.Self_SocialMaleHuman)
 		else:
 			if a.gender==b.gender:
 				if a.gender=='Male':
@@ -73,7 +81,7 @@ def GetGreeting(a,b):
 
 def FindGreeting(value):
 	if value>=60:
-		return greeting_postive[0]
+		return greeting_positive[0]
 	elif value>40 and value<60:
 		return greeting_neutral[0]
 	elif value<=40:
@@ -94,5 +102,5 @@ def GetVariable(a,b,entry):
 	elif entry=='other.name':
 		return b.name
 
-RenderResponse(a,b,greeting_positive[0])
-	
+#RenderResponse(a,b,greeting_positive[0])
+Conversation(a,b,greeting_positive[0])
