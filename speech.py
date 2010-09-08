@@ -2,9 +2,9 @@ import re
 
 #Speech banks
 #included in source for now
-greeting_postive=['Good %timeofday%, %other.name%.']
-greeting_neutral=['Hello, %other.name%.']
-greeting_negative=['%ignore%']
+greeting_positive=[]
+greeting_neutral=[]
+greeting_negative=[]
 
 class dummy:
 	def __init__(self,name):
@@ -13,13 +13,38 @@ class dummy:
 a = dummy('Adam')
 b = dummy('Eve')
 
+class SpeechClass(object):
+	def get(self):
+		#print self.line+' ('+str(self.align)+')'
+		return self.line
+		
+class Greeting(SpeechClass):
+	def __init__(self,line,align,question=False):
+		self.line=line
+		self.align=align
+		self.type='greeting'
+		self.question=question
+
+greeting_positive.append(Greeting('Good %timeofday%, %other.name%.',1))
+greeting_positive.append(Greeting('How are you, %other.name%?',1,question=True))
+greeting_neutral.append(Greeting('Hello, %other.name%.',0))
+greeting_negative.append(Greeting('%ignore%',-1))
+
 class Conversation:
-	def __init__(self,a,b):
-		self.weight=0
+	def __init__(self,a,b,type):
+		#self.weight=0
 		self.a=a
 		self.b=b
+		self.type=type
+	def start(self,type):
+		self.done=False
+		self.log=[]
+		while not self.done:
+			if len(self.log)==0:
+				r=Response(type)
+				#r.
 
-def Greeting(a,b):
+def GetGreeting(a,b):
 	#a = you
 	#b = them
 	if a.race==b.race:
@@ -55,8 +80,9 @@ def FindGreeting(value):
 		return greeting_negative[0]
 
 def RenderResponse(a,b,string):
-	temp=a.name+': '+string
-	found=re.findall('%(.*?)%', string)
+	line=string.get()
+	temp=a.name+': '+line
+	found=re.findall('%(.*?)%', line)
 	for entry in found:
 		temp=temp.replace(entry,GetVariable(a,b,entry))
 	temp=temp.replace('%','')
@@ -68,5 +94,5 @@ def GetVariable(a,b,entry):
 	elif entry=='other.name':
 		return b.name
 
-RenderResponse(a,b,greeting_postive[0])
+RenderResponse(a,b,greeting_positive[0])
 	
