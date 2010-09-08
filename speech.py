@@ -1,4 +1,5 @@
-import re
+import re,random
+random.seed()
 
 #Speech banks
 #included in source for now
@@ -11,8 +12,8 @@ class dummy:
 		self.name=name
 		self.gender=gender
 		self.race=race
-		self.Self_SocialFemaleHuman=70
-		self.Self_SocialMaleHuman=70
+		self.Self_SocialFemaleHuman=80
+		self.Self_SocialMaleHuman=50
 		
 a = dummy('Adam','Male','Human')
 b = dummy('Eve','Female','Human')
@@ -35,22 +36,22 @@ greeting_neutral.append(Greeting('Hello, %other.name%.',0))
 greeting_negative.append(Greeting('%ignore%',-1))
 
 class Conversation:
-	def __init__(self,a,b,start_line):
-		#self.weight=0
+	def __init__(self,a,b,type):
 		self.a=a
 		self.b=b
-		#self.type=type
-		self.start_line=start_line
-		self.type=self.start_line.type
-		#if start_line.type=='Greeting':
-		#	start('greeting')
+		self.type=type
 		self.start()
+		self.turn='a'
 	def start(self):
 		self.done=False
 		if self.type=='greeting':
 			resp=GetGreeting(self.a,self.b)
 			RenderResponse(self.a,self.b,resp)
-			
+			self.turn='b'
+		if self.done==False:
+			if resp.type=='greeting':
+				if resp.question==True:
+					print 'QUESTION'
 
 def GetGreeting(a,b):
 	#a = you
@@ -59,9 +60,9 @@ def GetGreeting(a,b):
 		if b.race=='Human':
 			if a.gender==b.gender:
 				if a.gender=='Male':
-					FindGreeting(a.Self_SocialFemaleHuman)
+					return FindGreeting(a.Self_SocialFemaleHuman)
 				else:
-					FindGreeting(a.Self_SocialMaleHuman)
+					return FindGreeting(a.Self_SocialMaleHuman)
 			else:
 				if a.gender=='Male':
 					return FindGreeting(a.Self_SocialFemaleHuman)
@@ -70,18 +71,18 @@ def GetGreeting(a,b):
 		else:
 			if a.gender==b.gender:
 				if a.gender=='Male':
-					FindGreeting(a.Self_SocialFemaleElf)
+					return FindGreeting(a.Self_SocialFemaleElf)
 				else:
-					FindGreeting(a.Self_SocialMaleElf)
+					return FindGreeting(a.Self_SocialMaleElf)
 			else:
 				if a.gender=='Male':
-					FindGreeting(a.Self_SocialFemaleElf)
+					return FindGreeting(a.Self_SocialFemaleElf)
 				else:
-					FindGreeting(a.Self_SocialMaleElf)
+					return FindGreeting(a.Self_SocialMaleElf)
 
 def FindGreeting(value):
 	if value>=60:
-		return greeting_positive[0]
+		return greeting_positive[random.randint(0,len(greeting_positive)-1)]
 	elif value>40 and value<60:
 		return greeting_neutral[0]
 	elif value<=40:
@@ -103,4 +104,4 @@ def GetVariable(a,b,entry):
 		return b.name
 
 #RenderResponse(a,b,greeting_positive[0])
-Conversation(a,b,greeting_positive[0])
+Conversation(a,b,'greeting')
