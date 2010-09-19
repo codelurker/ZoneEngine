@@ -11,7 +11,11 @@ init_pair(3, COLOR_RED, COLOR_BLACK)
 
 class PlayerInput(threading.Thread):
 	def run(self):
-		while vars.running: vars.player.GetInput()
+		while vars.running:
+			vars.player.GetInput()
+			for char in vars.character:
+				vars.map1.DrawPos(char.x,char.y)
+				char.Draw()
 
 class Void:
 	def __init__(self):
@@ -191,7 +195,6 @@ class Character:
 
 		if not self.isplayer:
 			if self.moveticks<=0:
-				#self.MoveRandomize()
 				if self.OnPath==True:
 					if self.CurrentPath_Number<len(self.CurrentPath):
 						self.x=self.CurrentPath[self.CurrentPath_Number][0]
@@ -200,7 +203,6 @@ class Character:
 						#pass
 				else:
 					self.CurrentPath=astar.MakePath(self.x,self.y,10,10)
-					#self.CurrentPath=astar.MakePath(20,20,10,10)
 					self.CurrentPath_Number=0
 					self.OnPath=True
 					
