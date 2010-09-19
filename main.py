@@ -1,11 +1,6 @@
 import classes,vars,random,sys,time,threading
 import newmapgen as map
 import functions as funcs
-#try:
-#	if sys.argv[1]=='-curses':
-#		vars.curses=True
-#except IndexError:
-#	print "No curses."
 
 vars.TOPBAR='ZoneEngine'
 vars.running=True
@@ -48,6 +43,7 @@ class GameThread(threading.Thread):
 			for char in vars.character:
 				vars.map1.DrawPos(char.x,char.y)
 				char.Tick()
+				char.Draw()
 			funcs.DrawStringColor(3,vars.TOPBAR,bold=True)
 			refresh()
 			time.sleep(0.1)

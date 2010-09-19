@@ -141,33 +141,25 @@ class Character:
 		if key==KEY_UP:
 			if vars.map1.Map[self.x,self.y-1]==4 or vars.map1.Map[self.x,self.y-1]==1:
 				if self.y>0:
-					vars.map1.DrawPos(self.x,self.y)
 					self.y-=1
-					self.Draw()
 			if vars.paused==True:
 				vars.paused=False
 		elif key==KEY_DOWN:
 			if vars.map1.Map[self.x,self.y+1]==4 or vars.map1.Map[self.x,self.y+1]==1:
 				if self.y<vars.map1.sizeY-2:
-					vars.map1.DrawPos(self.x,self.y)
 					self.y+=1
-					self.Draw()
 			if vars.paused==True:
 				vars.paused=False
 		elif key==KEY_LEFT:
 			if vars.map1.Map[self.x-1,self.y]==4 or vars.map1.Map[self.x-1,self.y]==1:
 				if self.x>0:
-					vars.map1.DrawPos(self.x,self.y)
 					self.x-=1
-					self.Draw()
 			if vars.paused==True:
 				vars.paused=False
 		elif key==KEY_RIGHT:
 			if vars.map1.Map[self.x+1,self.y]==4 or vars.map1.Map[self.x+1,self.y]==1:
 				if self.x<vars.map1.sizeX-2:
-					vars.map1.DrawPos(self.x,self.y)
 					self.x+=1
-					self.Draw()
 			if vars.paused==True:
 				vars.paused=False
 		elif key==ord('i'):
@@ -187,11 +179,11 @@ class Character:
 	def Tick(self):
 		if self.ticks==20:
 			self.age+=1
-			funcs.DrawString(self.name+' is now '+str(self.age))
+			#funcs.DrawString(self.name+' is now '+str(self.age))
 			self.ticks=0
 		if self.age==50:
 			del vars.character[funcs.FindInList(self,vars.character)]
-			funcs.DrawString(self.name+' has died. Removing '+str(self.id))
+			#funcs.DrawString(self.name+' has died. Removing '+str(self.id))
 		
 		if len(self.children)<1 and self.gender=="Female":
 			if random.randint(0,50)<=8:
@@ -215,7 +207,6 @@ class Character:
 				self.moveticks=self.moveticks_max
 			else:
 				self.moveticks-=1
-		self.Draw()
 		self.ticks+=1
 	
 	def MoveRandomize(self,xm=True,ym=True):

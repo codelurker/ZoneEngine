@@ -9,13 +9,13 @@ class ALife(object):
 		self.race='null'
 		self.age=0
 		self.birthplace=None
+
+		#Private range
+		self._id=0			#Used to reference ALife
 		
 		#Stat range
 		self.strength=0
 		self.dexterity=0	#Agility/reaction time
-
-		#Private range
-		self._id=0			#Used to reference ALife
 
 class NPC(ALife):
 	def debug_show_stats(self):
