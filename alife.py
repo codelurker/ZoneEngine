@@ -12,12 +12,10 @@ class ALife(object):
 		
 		#Stat range
 		self.strength=0
-		self.dexterity=0
+		self.dexterity=0	#Agility/reaction time
 
 		#Private range
-		self._id=0
-		
-		self.debug_show_stats()
+		self._id=0			#Used to reference ALife
 
 class NPC(ALife):
 	def debug_show_stats(self):

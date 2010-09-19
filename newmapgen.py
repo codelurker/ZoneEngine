@@ -267,7 +267,7 @@ class Room:
 			for x in range(self.sizeX):
 				if self.no_fill==False:
 					if x==0 or x==self.sizeX-1:
-						if random.randint(0,6)<=3:
+						if random.randint(0,6)<=1:
 							self.Tile[x,y]=5
 						else:
 							if random.randint(0,40)<=7:
@@ -275,7 +275,7 @@ class Room:
 							else:
 								self.Tile[x,y]=3
 					if y==0 or y==self.sizeY-1:
-						if random.randint(0,6)<=3:
+						if random.randint(0,6)<=1:
 							self.Tile[x,y]=5
 						else:
 							if random.randint(0,40)<=7:

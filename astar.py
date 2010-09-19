@@ -70,7 +70,7 @@ def MakePath(x1,y1,x2,y2):
 			next_node=start_node
 			step=0
 			fail+=1
-		if fail>=10:
+		if fail>=30:
 			vars.TOPBAR='FAILED'
 			sys.exit()
 
