@@ -3,10 +3,9 @@
 import alife_functions
 import alife_speech
 
-
 #General
 import functions as funcs
-import vars
+import vars,astar
 from unicurses import *
 
 class ALife(object):
@@ -30,6 +29,7 @@ class ALife(object):
 		#Sub-Private range
 		self.x=10
 		self.y=15
+		self.inventory=[]
 		
 		#Stat range
 		self.strength=0
@@ -60,12 +60,21 @@ class ALife(object):
 			self._ticks=self._maxticks
 		else:
 			self._ticks-=1
-
+		
 		self.Draw()
 
 	def Move(self):
-		pass
-		
+		if self.OnPath==True:
+			if self.CurrentPath_Number<len(self.CurrentPath):
+				self.x=self.CurrentPath[self.CurrentPath_Number][0]
+				self.y=self.CurrentPath[self.CurrentPath_Number][1]
+				self.CurrentPath_Number+=1
+				#pass
+		else:
+			self.CurrentPath=astar.MakePath(self.x,self.y,10,10)
+			self.CurrentPath_Number=0
+			self.OnPath=True
+				
 	def Draw(self):
 		funcs.DrawStringColor(2,self.sprite,x=self.x,y=self.y,bold=True,noclear=False)
 
