@@ -13,9 +13,7 @@ class PlayerInput(threading.Thread):
 	def run(self):
 		while vars.running:
 			vars.player.GetInput()
-			for char in vars.character:
-				vars.map1.DrawPos(char.x,char.y)
-				char.Draw()
+			vars.player.Draw()
 
 class Void:
 	def __init__(self):
@@ -145,24 +143,28 @@ class Character:
 		if key==KEY_UP:
 			if vars.map1.Map[self.x,self.y-1]==4 or vars.map1.Map[self.x,self.y-1]==1:
 				if self.y>0:
+					vars.map1.DrawPos(vars.player.x,vars.player.y)
 					self.y-=1
 			if vars.paused==True:
 				vars.paused=False
 		elif key==KEY_DOWN:
 			if vars.map1.Map[self.x,self.y+1]==4 or vars.map1.Map[self.x,self.y+1]==1:
 				if self.y<vars.map1.sizeY-2:
+					vars.map1.DrawPos(vars.player.x,vars.player.y)
 					self.y+=1
 			if vars.paused==True:
 				vars.paused=False
 		elif key==KEY_LEFT:
 			if vars.map1.Map[self.x-1,self.y]==4 or vars.map1.Map[self.x-1,self.y]==1:
 				if self.x>0:
+					vars.map1.DrawPos(vars.player.x,vars.player.y)
 					self.x-=1
 			if vars.paused==True:
 				vars.paused=False
 		elif key==KEY_RIGHT:
 			if vars.map1.Map[self.x+1,self.y]==4 or vars.map1.Map[self.x+1,self.y]==1:
 				if self.x<vars.map1.sizeX-2:
+					vars.map1.DrawPos(vars.player.x,vars.player.y)
 					self.x+=1
 			if vars.paused==True:
 				vars.paused=False
