@@ -1,6 +1,8 @@
-import classes,vars,random,sys,time,threading
+import vars,random,sys,time,threading
 import newmapgen as map
 import functions as funcs
+import alife
+import threads
 
 vars.TOPBAR='ZoneEngine'
 vars.running=True
@@ -24,16 +26,19 @@ ticks=0
 vars.map1=map.Map(80,25)
 vars.map1.Generate()
 vars.map1.Draw()
+vars.player=alife.Player()
 
-adam=classes.Character(gender='Male',name='Adam',age=20)
-eve=classes.Character(gender='Female',name='Eve',age=20)
-vars.player=classes.Character(isplayer=True,name='Player',gender="Male")
+adam = alife.NPC()
 
-iwepDagger=classes.Item(owner=vars.player,name='Dagger')
-iwepSword=classes.Item(owner=vars.player,name='Sword')
+#adam=classes.Character(gender='Male',name='Adam',age=20)
+#eve=classes.Character(gender='Female',name='Eve',age=20)
+#vars.player=classes.Character(isplayer=True,name='Player',gender="Male")
 
-funcs.Parents_MakeChild(eve,adam)
-vars.player.Draw()
+#iwepDagger=classes.Item(owner=vars.player,name='Dagger')
+#iwepSword=classes.Item(owner=vars.player,name='Sword')
+
+#funcs.Parents_MakeChild(eve,adam)
+#vars.player.Draw()
 
 class GameThread(threading.Thread):
 	def run(self):
@@ -43,7 +48,7 @@ class GameThread(threading.Thread):
 			for char in vars.character:
 				vars.map1.DrawPos(char.x,char.y)
 				char.Tick()
-				char.Draw()
+				#char.Draw()
 			funcs.DrawStringColor(3,vars.TOPBAR,bold=True)
 			refresh()
 			time.sleep(0.1)
@@ -52,4 +57,4 @@ class GameThread(threading.Thread):
 				sys.exit()
 
 GameThread().start()
-classes.PlayerInput().start()
+threads.PlayerInput().start()

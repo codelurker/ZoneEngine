@@ -1,4 +1,4 @@
 #New ALife: Functions
 
-def Temp:
+def Temp():
 	pass
