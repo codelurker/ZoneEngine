@@ -1,13 +1,4 @@
 import vars,random,sys,time,threading
-import newmapgen as map
-import functions as funcs
-import alife
-import threads
-
-vars.TOPBAR='ZoneEngine'
-vars.running=True
-vars.curses=True
-
 try:
 	from unicurses import *
 	vars.screen = initscr()
@@ -25,11 +16,19 @@ except:
 	noecho()
 	cbreak()
 	curs_set(0)
-	#keypad(vars.screen, True)
+	vars.screen.keypad(1)
 	start_color()
 	init_pair(1, COLOR_GREEN, COLOR_BLACK)
 	init_pair(2, COLOR_CYAN, COLOR_BLACK)
 	init_pair(3, COLOR_RED, COLOR_BLACK)
+import newmapgen as map
+import functions as funcs
+import alife
+import threads
+
+vars.TOPBAR='ZoneEngine'
+vars.running=True
+vars.curses=True
 
 random.seed()
 ticks=0

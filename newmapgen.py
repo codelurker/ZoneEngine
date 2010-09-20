@@ -5,6 +5,9 @@ try:
 	from unicurses import *
 except:
 	from curses import *
+	#start_color()
+	#init_pair(1, COLOR_GREEN, COLOR_BLACK)
+	#init_pair(2, COLOR_GREEN, COLOR_BLACK)
 from time import time
 """stdscr = initscr()
 noecho()
@@ -66,20 +69,22 @@ class Map:
 					except:
 						vars.screen.addstr(y, x, Render(self.Map[x,y]))
 				if self.Map[x,y]==4:
-					vars.screen.attron(COLOR_PAIR(1))
 					try:
+						vars.screen.attron(COLOR_PAIR(1))
 						mvaddstr(y, x, Render(self.Map[x,y]))
-					except:
-						vars.screen.addstr(y, x, Render(self.Map[x,y]))	
 						vars.screen.attroff(COLOR_PAIR(1))
+					except:
+						vars.screen.attron(color_pair(1))
+						vars.screen.addstr(y, x, Render(self.Map[x,y]))	
+						vars.screen.attroff(color_pair(1))
 				if self.Map[x,y]==3:
-					vars.screen.attron(A_ALTCHARSET)
+					#vars.screen.attron(A_ALTCHARSET)
 					try:
 						mvaddstr(y, x, Render(self.Map[x,y]))
 					except:
 						vars.screen.addstr(y, x, Render(self.Map[x,y]))
 
-					vars.screen.attroff(A_ALTCHARSET)
+					#vars.screen.attroff(A_ALTCHARSET)
 				if self.Map[x,y]!=3 and self.Map[x,y]!=4 and self.Map[x,y]!=1:
 					try:
 						mvaddstr(y, x, Render(self.Map[x,y]))
