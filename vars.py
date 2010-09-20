@@ -7,6 +7,10 @@ character_ID=[]
 item=[]
 item_ID=[]
 
+map_size=(80,25)
+scroll_x=0
+scroll_y=0
+
 AI_Nodes=[]
 
 femalename=['Aidan','Abby','April']

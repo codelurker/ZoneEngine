@@ -2,7 +2,6 @@ import threading
 import vars
 import functions as funcs
 
-
 #Input
 class PlayerInput(threading.Thread):
 	def run(self):

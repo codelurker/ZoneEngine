@@ -25,7 +25,8 @@ except:
 random.seed()
 ticks=0
 
-vars.map1=map.Map(80,25)
+#vars.map1=map.Map(80,25)
+vars.map1=map.Map(80,40)
 vars.map1.Generate()
 vars.map1.Draw()
 vars.player=alife.Player()
@@ -53,7 +54,7 @@ class GameThread(threading.Thread):
 				char.Tick()
 				#char.Draw()
 			funcs.DrawStringColor(3,vars.TOPBAR,bold=True)
-			refresh()
+			doupdate()
 			time.sleep(0.1)
 			if vars.running==False:
 				endwin()

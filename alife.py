@@ -97,6 +97,7 @@ class ALife(object):
 								attron(COLOR_PAIR(1))
 								funcs.DrawString('.',x=self.x+xdist,y=self.y+ydist,noclear=False)
 								attroff(COLOR_PAIR(1))
+								noutrefresh(vars.screen)
 					xdist+=1
 				if xdist>=2:
 					xdist=-2
@@ -122,6 +123,8 @@ class Player(NPC,ALife):
 				if self.y>0:
 					vars.map1.DrawPos(vars.player.x,vars.player.y)
 					self.y-=1
+					if self.y>10:
+						vars.scroll_y-=1
 			if vars.paused==True:
 				vars.paused=False
 		elif key==KEY_DOWN:
@@ -129,6 +132,8 @@ class Player(NPC,ALife):
 				if self.y<vars.map1.sizeY-2:
 					vars.map1.DrawPos(vars.player.x,vars.player.y)
 					self.y+=1
+					if self.y>10:
+						vars.scroll_y+=1
 			if vars.paused==True:
 				vars.paused=False
 		elif key==KEY_LEFT:
@@ -155,9 +160,8 @@ class Player(NPC,ALife):
 			for item in self.inventory:
 				funcs.DrawString(str(a)+') '+item.name,y=a)
 				a+=1
-			refresh()
 		elif key==ord('q'):
 			vars.running=False
-
+		
 #adam = NPC()
 #adam.debug_show_stats()
