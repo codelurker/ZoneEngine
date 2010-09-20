@@ -29,6 +29,7 @@ vars.map1.Draw()
 vars.player=alife.Player()
 
 adam = alife.NPC()
+vars.player._isplayer=True
 
 #adam=classes.Character(gender='Male',name='Adam',age=20)
 #eve=classes.Character(gender='Female',name='Eve',age=20)

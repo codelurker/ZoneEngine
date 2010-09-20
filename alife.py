@@ -24,6 +24,7 @@ class ALife(object):
 		self._id=0			#Used to reference ALife
 		self._maxticks=3
 		self._ticks=self._maxticks
+		self._isplayer=False
 		vars.character.append(self)
 		
 		#Sub-Private range
@@ -64,19 +65,38 @@ class ALife(object):
 		self.Draw()
 
 	def Move(self):
-		if self.OnPath==True:
-			if self.CurrentPath_Number<len(self.CurrentPath):
-				self.x=self.CurrentPath[self.CurrentPath_Number][0]
-				self.y=self.CurrentPath[self.CurrentPath_Number][1]
-				self.CurrentPath_Number+=1
-				#pass
-		else:
-			self.CurrentPath=astar.MakePath(self.x,self.y,10,10)
-			self.CurrentPath_Number=0
-			self.OnPath=True
+		if not self._isplayer:
+			if self.OnPath==True:
+				if self.CurrentPath_Number<len(self.CurrentPath):
+					self.x=self.CurrentPath[self.CurrentPath_Number][0]
+					self.y=self.CurrentPath[self.CurrentPath_Number][1]
+					self.CurrentPath_Number+=1
+					#pass
+			else:
+				self.CurrentPath=astar.MakePath(self.x,self.y,10,10)
+				self.CurrentPath_Number=0
+				self.OnPath=True
 				
 	def Draw(self):
 		funcs.DrawStringColor(2,self.sprite,x=self.x,y=self.y,bold=True,noclear=False)
+		if self._isplayer:
+			vars.map1.RedrawAll(1,pos=(self.x,self.y))
+			xdist=-2
+			ydist=-2
+			while ydist<=2:
+				while xdist<=2:
+					if xdist==0 and ydist==0:
+						pass
+					else:
+						if self.y+ydist<vars.map1.sizeY and self.x+xdist<vars.map1.sizeX:
+							if vars.map1.Map[self.x+xdist,self.y+ydist]==1:
+								attron(COLOR_PAIR(1))
+								funcs.DrawString('.',x=self.x+xdist,y=self.y+ydist,noclear=False)
+								attroff(COLOR_PAIR(1))
+					xdist+=1
+				if xdist>=2:
+					xdist=-2
+				ydist+=1
 
 class NPC(ALife):
 	def debug_show_stats(self):
