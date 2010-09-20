@@ -1,5 +1,8 @@
 import vars,random,sys,time,threading
-import newmapgen as map
+try:
+	import newmapgen as map
+except:
+	pass
 import functions as funcs
 import alife
 import threads
@@ -8,7 +11,7 @@ vars.TOPBAR='ZoneEngine'
 vars.running=True
 vars.curses=True
 
-if vars.curses==True:
+try:
 	from unicurses import *
 	vars.screen = initscr()
 	noecho()
@@ -19,6 +22,8 @@ if vars.curses==True:
 	init_pair(1, COLOR_GREEN, COLOR_BLACK)
 	init_pair(2, COLOR_CYAN, COLOR_BLACK)
 	init_pair(3, COLOR_RED, COLOR_BLACK)
+except:
+	print 'error'
 
 random.seed()
 ticks=0

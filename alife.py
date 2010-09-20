@@ -6,7 +6,11 @@ import alife_speech
 #General
 import functions as funcs
 import vars,astar
-from unicurses import *
+
+try:
+	from unicurses import *
+except:
+	pass
 
 class ALife(object):
 	def __init__(self):

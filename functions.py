@@ -1,10 +1,13 @@
 import vars,random,classes
-from unicurses import *
+try:
+	from unicurses import *
+	init_pair(1, COLOR_GREEN, COLOR_BLACK)
+	init_pair(2, COLOR_CYAN, COLOR_BLACK)
+	init_pair(3, COLOR_RED, COLOR_BLACK)
+except:
+	pass
 
 random.seed()
-init_pair(1, COLOR_GREEN, COLOR_BLACK)
-init_pair(2, COLOR_CYAN, COLOR_BLACK)
-init_pair(3, COLOR_RED, COLOR_BLACK)
 
 def ID_Give():
 	vars.ID+=1
