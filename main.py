@@ -1,8 +1,5 @@
 import vars,random,sys,time,threading
-try:
-	import newmapgen as map
-except:
-	pass
+import newmapgen as map
 import functions as funcs
 import alife
 import threads
