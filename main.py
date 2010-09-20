@@ -1,8 +1,5 @@
 import vars,random,sys,time,threading
-try:
-	import newmapgen as map
-except:
-	pass
+import newmapgen as map
 import functions as funcs
 import alife
 import threads
@@ -23,7 +20,16 @@ try:
 	init_pair(2, COLOR_CYAN, COLOR_BLACK)
 	init_pair(3, COLOR_RED, COLOR_BLACK)
 except:
-	print 'error'
+	from curses import *
+	vars.screen = initscr()
+	noecho()
+	cbreak()
+	curs_set(0)
+	#keypad(vars.screen, True)
+	start_color()
+	init_pair(1, COLOR_GREEN, COLOR_BLACK)
+	init_pair(2, COLOR_CYAN, COLOR_BLACK)
+	init_pair(3, COLOR_RED, COLOR_BLACK)
 
 random.seed()
 ticks=0

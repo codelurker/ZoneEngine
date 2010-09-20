@@ -1,7 +1,10 @@
 import random,numpy,time,vars,math
 from numpy import *
 from math import *
-from unicurses import *
+try:
+	from unicurses import *
+except:
+	from curses import *
 from time import time
 """stdscr = initscr()
 noecho()
@@ -58,17 +61,30 @@ class Map:
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):
 				if self.Map[x,y]==1:
-					mvaddstr(y, x, Render(self.Map[x,y]))
+					try:
+						mvaddstr(y, x, Render(self.Map[x,y]))
+					except:
+						vars.screen.addstr(y, x, Render(self.Map[x,y]))
 				if self.Map[x,y]==4:
-					attron(COLOR_PAIR(1))
-					mvaddstr(y, x, Render(self.Map[x,y]))
-					attroff(COLOR_PAIR(1))
+					vars.screen.attron(COLOR_PAIR(1))
+					try:
+						mvaddstr(y, x, Render(self.Map[x,y]))
+					except:
+						vars.screen.addstr(y, x, Render(self.Map[x,y]))	
+						vars.screen.attroff(COLOR_PAIR(1))
 				if self.Map[x,y]==3:
-					attron(A_ALTCHARSET)
-					mvaddstr(y, x, Render(self.Map[x,y]))
-					attroff(A_ALTCHARSET)
+					vars.screen.attron(A_ALTCHARSET)
+					try:
+						mvaddstr(y, x, Render(self.Map[x,y]))
+					except:
+						vars.screen.addstr(y, x, Render(self.Map[x,y]))
+
+					vars.screen.attroff(A_ALTCHARSET)
 				if self.Map[x,y]!=3 and self.Map[x,y]!=4 and self.Map[x,y]!=1:
-					mvaddstr(y, x, Render(self.Map[x,y]))
+					try:
+						mvaddstr(y, x, Render(self.Map[x,y]))
+					except:
+						vars.screen.addstr(y, x, Render(self.Map[x,y]))
 	def DrawCustom(self,array):
 		for y in range(self.sizeY):
 			for x in range(self.sizeX):

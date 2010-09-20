@@ -7,7 +7,7 @@ try:
 	init_pair(2, COLOR_CYAN, COLOR_BLACK)
 	init_pair(3, COLOR_RED, COLOR_BLACK)
 except:
-	pass
+	from curses import *
 
 vars.ID=0
 random.seed()

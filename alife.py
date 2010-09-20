@@ -10,7 +10,7 @@ import vars,astar
 try:
 	from unicurses import *
 except:
-	pass
+	from curses import *
 
 class ALife(object):
 	def __init__(self):
