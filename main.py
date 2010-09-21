@@ -6,7 +6,14 @@ import threads
 
 vars.TOPBAR='ZoneEngine'
 vars.running=True
+#vars.speedy=False
+vars.turnbased=True
 vars.curses=True
+
+if vars.turnbased:
+	vars.speedy=False
+else:
+	vars.speedy=True
 
 try:
 	from unicurses import *
@@ -26,7 +33,7 @@ random.seed()
 ticks=0
 
 #vars.map1=map.Map(80,25)
-vars.map1=map.Map(80,40)
+vars.map1=map.Map(80,25)
 vars.map1.Generate()
 vars.map1.Draw()
 vars.player=alife.Player()
@@ -47,18 +54,23 @@ vars.player._isplayer=True
 class GameThread(threading.Thread):
 	def run(self):
 		while 1:
-			while vars.paused:
+			if vars.paused:
 				pass
+			else:
+				if vars.turnbased:
+					vars.player.GetInput()
+			
 			for char in vars.character:
 				vars.map1.DrawPos(char.x,char.y)
 				char.Tick()
 				#char.Draw()
-			funcs.DrawStringColor(3,vars.TOPBAR,bold=True)
+			noutrefresh(vars.screen)
 			doupdate()
-			time.sleep(0.1)
+			#refresh()
+			if vars.speedy: time.sleep(0.1)
 			if vars.running==False:
 				endwin()
 				sys.exit()
 
 GameThread().start()
-threads.PlayerInput().start()
+#threads.PlayerInput().start()

@@ -5,7 +5,7 @@ import alife_speech
 
 #General
 import functions as funcs
-import vars,astar
+import vars,astar,time
 
 try:
 	from unicurses import *
@@ -57,6 +57,9 @@ class ALife(object):
 		#References
 		self.first_name=self.name[0]
 		self.last_name=self.name[1]
+		
+		#Run commands
+		funcs.Self_PutOnMap(self)
 
 	def Tick(self):
 		if self._ticks==0:
@@ -97,7 +100,6 @@ class ALife(object):
 								attron(COLOR_PAIR(1))
 								funcs.DrawString('.',x=self.x+xdist,y=self.y+ydist,noclear=False)
 								attroff(COLOR_PAIR(1))
-								noutrefresh(vars.screen)
 					xdist+=1
 				if xdist>=2:
 					xdist=-2
@@ -160,6 +162,8 @@ class Player(NPC,ALife):
 			for item in self.inventory:
 				funcs.DrawString(str(a)+') '+item.name,y=a)
 				a+=1
+		elif key==ord('a'):
+			pass
 		elif key==ord('q'):
 			vars.running=False
 		
