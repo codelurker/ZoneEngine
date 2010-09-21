@@ -163,7 +163,7 @@ class Player(NPC,ALife):
 				funcs.DrawString(str(a)+') '+item.name,y=a)
 				a+=1
 		elif key==ord('a'):
-			pass
+			vars.paused=True
 		elif key==ord('q'):
 			vars.running=False
 		
